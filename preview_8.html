@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Collegiate Registry &mdash; A Formal Survey of 250 Leading American Universities</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;0,900;1,600&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Cormorant+SC:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+
+/* ============================================================
+   TOKENS
+   ============================================================ */
+:root{
+  --ink:#161a14;
+  --navy:#0d2038;
+  --navy-deep:#081524;
+  --parchment:#f7f2e5;
+  --parchment-dark:#eee5cd;
+  --parchment-line:#d9caa4;
+  --oxblood:#7c2430;
+  --oxblood-deep:#5c1620;
+  --gold:#a97e39;
+  --gold-light:#d9b877;
+  --gold-pale:#efe0bb;
+  --ivy:#2f4a35;
+  --plum:#5b3a6e;
+  --shadow-soft: 0 10px 30px rgba(13,32,56,0.12);
+  --shadow-deep: 0 24px 60px rgba(8,21,36,0.28);
+  --font-display: 'Playfair Display', 'Times New Roman', serif;
+  --font-body: 'EB Garamond', 'Times New Roman', serif;
+  --font-label: 'Cormorant SC', 'Playfair Display', serif;
+  --ease: cubic-bezier(.22,.9,.32,1);
+  --ease-spring: cubic-bezier(.34,1.4,.4,1);
+}
+
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  margin:0;
+  background:var(--parchment);
+  color:var(--ink);
+  font-family:var(--font-body);
+  font-size:18px;
+  line-height:1.5;
+  background-image:
+    radial-gradient(circle at 20% 10%, rgba(169,126,57,0.05), transparent 40%),
+    radial-gradient(circle at 85% 30%, rgba(124,36,48,0.04), transparent 45%);
+  overflow-x:hidden;
+}
+
+::selection{background:var(--gold-light); color:var(--navy-deep);}
+::-webkit-scrollbar{width:10px;}
+::-webkit-scrollbar-track{background:var(--parchment-dark);}
+::-webkit-scrollbar-thumb{background:var(--gold); border-radius:6px;}
+
+h1,h2,h3,h4{font-family:var(--font-display); margin:0; font-weight:700; color:var(--navy);}
+p{margin:0;}
+a{color:inherit;}
+button{font-family:inherit; cursor:pointer;}
+
+.label{
+  font-family:var(--font-label);
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  font-weight:600;
+  font-size:.82rem;
+  color:var(--oxblood);
+}
+
+.ornament-rule{
+  width:0%;
+  height:2px;
+  margin:0 auto;
+  background:linear-gradient(90deg, transparent, var(--gold), transparent);
+  transition:width 1.4s var(--ease);
+}
+.ornament-rule.in-view{width:64%;}
+
+/* ============================================================
+   AUDIO CONTROL
+   ============================================================ */
+.audio-panel{
+  position:fixed; top:18px; right:18px; z-index:500;
+  background:var(--navy); color:var(--parchment);
+  border:1px solid var(--gold); border-radius:999px;
+  padding:8px 16px 8px 8px;
+  display:flex; align-items:center; gap:10px;
+  box-shadow:var(--shadow-soft);
+  transition:box-shadow .3s var(--ease), transform .3s var(--ease);
+}
+.audio-panel:hover{ box-shadow:var(--shadow-deep); transform:translateY(-2px); }
+.audio-toggle{
+  width:38px;height:38px;border-radius:50%;
+  border:1px solid var(--gold-light);
+  background:var(--navy-deep); color:var(--gold-light);
+  display:flex;align-items:center;justify-content:center;
+  position:relative; flex-shrink:0;
+  transition:background .3s var(--ease), transform .2s var(--ease);
+}
+.audio-toggle:hover{ transform:scale(1.08); }
+.audio-toggle:active{ transform:scale(0.94); }
+.eq-bars{ display:flex; align-items:flex-end; gap:2px; height:14px; width:16px; }
+.eq-bars span{
+  width:3px; background:var(--gold-light); border-radius:2px; height:4px;
+  transform-origin:bottom; animation:eqmove 1.1s ease-in-out infinite; animation-play-state:paused;
+}
+.audio-panel.playing .eq-bars span{ animation-play-state:running; }
+.eq-bars span:nth-child(1){animation-delay:0s;}
+.eq-bars span:nth-child(2){animation-delay:.18s;}
+.eq-bars span:nth-child(3){animation-delay:.36s;}
+@keyframes eqmove{ 0%,100%{height:4px;} 50%{height:14px;} }
+.audio-label{ font-family:var(--font-label); font-size:.78rem; letter-spacing:.1em; white-space:nowrap; }
+.audio-panel input[type="range"]{ width:70px; accent-color:var(--gold-light); }
+
+/* ============================================================
+   HERO
+   ============================================================ */
+.hero{
+  position:relative; padding:96px 24px 70px; text-align:center;
+  background:linear-gradient(180deg, var(--navy-deep), var(--navy) 55%, var(--navy) 100%);
+  color:var(--parchment); overflow:hidden;
+}
+.hero::before, .hero::after{
+  content:""; position:absolute; top:0; bottom:0; width:1px;
+  background:linear-gradient(180deg, transparent, rgba(217,184,119,.35), transparent);
+}
+.hero::before{ left:6%; }
+.hero::after{ right:6%; }
+
+.crest{
+  width:108px;height:108px; margin:0 auto 22px; border-radius:50%;
+  border:2px solid var(--gold-light);
+  background:radial-gradient(circle at 35% 30%, #16324f, var(--navy-deep));
+  display:flex;align-items:center;justify-content:center; position:relative;
+  opacity:0; animation:crestIn 1.1s .1s var(--ease-spring) forwards;
+}
+.crest::before{
+  content:""; position:absolute; inset:-9px; border-radius:50%;
+  border:1px solid rgba(217,184,119,.4); animation:crestPulse 3.6s ease-in-out infinite;
+}
+.crest span{ font-family:var(--font-display); font-size:2.1rem; font-weight:700; color:var(--gold-light); }
+@keyframes crestIn{ from{opacity:0; transform:scale(.4) rotate(-30deg);} to{opacity:1; transform:scale(1) rotate(0);} }
+@keyframes crestPulse{ 0%,100%{ transform:scale(1); opacity:.7; } 50%{ transform:scale(1.08); opacity:.15; } }
+
+.hero h1{ color:var(--parchment); font-size:clamp(2rem, 5vw, 3.4rem); letter-spacing:.01em; opacity:0; animation:riseIn .9s .3s var(--ease) forwards; }
+.hero .subtitle{ font-family:var(--font-body); font-style:italic; font-size:1.1rem; color:var(--gold-pale); margin-top:16px; opacity:0; animation:riseIn .9s .5s var(--ease) forwards; }
+.hero .motto{ margin-top:26px; font-family:var(--font-label); letter-spacing:.22em; font-size:.85rem; color:var(--gold-light); opacity:0; animation:riseIn .9s .7s var(--ease) forwards; }
+@keyframes riseIn{ from{opacity:0; transform:translateY(18px);} to{opacity:1; transform:translateY(0);} }
+
+.hero-stats{ margin-top:44px; display:flex; justify-content:center; gap:48px; flex-wrap:wrap; opacity:0; animation:riseIn .9s .9s var(--ease) forwards; }
+.hero-stat b{ display:block; font-family:var(--font-display); font-size:1.8rem; color:var(--gold-light); }
+.hero-stat span{ font-family:var(--font-label); letter-spacing:.12em; font-size:.74rem; color:var(--parchment); opacity:.75; }
+
+/* ============================================================
+   CONTROLS BAR
+   ============================================================ */
+.controls-wrap{ position:sticky; top:0; z-index:200; background:rgba(247,242,229,.94); backdrop-filter:blur(6px); border-bottom:1px solid var(--parchment-line); }
+.controls{ max-width:1320px; margin:0 auto; padding:8px 24px; display:flex; flex-wrap:wrap; gap:7px; align-items:center; }
+.controls .search-field{ flex:1 1 150px; position:relative; }
+.controls input[type="text"], .controls select{
+  width:100%; font-family:var(--font-body); font-size:.78rem; padding:5px 8px;
+  border:1px solid var(--parchment-line); border-radius:3px; background:#fffdf7; color:var(--ink);
+  transition:border-color .25s var(--ease), box-shadow .25s var(--ease);
+}
+.controls select{ cursor:pointer; flex:0 1 auto; width:auto; max-width:132px; }
+.controls input[type="text"]:focus, .controls select:focus{ outline:none; border-color:var(--gold); box-shadow:0 0 0 2px rgba(169,126,57,.18); }
+.view-toggle{ display:flex; border:1px solid var(--navy); border-radius:3px; overflow:hidden; flex-shrink:0; }
+.view-toggle button{ border:none; background:transparent; padding:6px 11px; font-family:var(--font-label); letter-spacing:.07em; font-size:.72rem; color:var(--navy); transition:background .25s var(--ease), color .25s var(--ease); }
+.view-toggle button.active{ background:var(--navy); color:var(--parchment); }
+.result-count{ font-family:var(--font-label); font-size:.7rem; letter-spacing:.07em; color:var(--oxblood); white-space:nowrap; }
+
+/* ============================================================
+   SECTION HEADERS
+   ============================================================ */
+.section-head{ text-align:center; max-width:760px; margin:56px auto 34px; padding:0 24px; }
+.section-head .label{ display:block; margin-bottom:10px; }
+.section-head h2{ font-size:clamp(1.4rem,3vw,2.1rem); }
+.section-head p{ margin-top:12px; font-style:italic; color:#4b4536; }
+
+/* ============================================================
+   LEGEND
+   ============================================================ */
+.legend{
+  max-width:1280px; margin:0 auto 4px; padding:8px 24px 0;
+  display:flex; flex-wrap:wrap; gap:8px 18px; justify-content:center;
+  font-size:.76rem; color:#4b4536;
+}
+.legend-item{ display:flex; align-items:center; gap:7px; }
+.legend-dot{ width:13px; height:13px; border-radius:3px; display:inline-block; }
+
+/* ============================================================
+   GALLERY GRID
+   ============================================================ */
+.gallery{
+  max-width:1320px; margin:0 auto; padding:10px 24px 40px;
+  display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:26px;
+}
+.card{
+  background:#fffdf8; border:1px solid var(--parchment-line); border-radius:6px;
+  overflow:hidden; position:relative; box-shadow:0 4px 14px rgba(13,32,56,.06);
+  opacity:0; transform:translateY(22px); animation:cardIn .6s var(--ease) forwards;
+  transition:transform .4s var(--ease), box-shadow .4s var(--ease), border-color .4s var(--ease);
+  content-visibility:auto; contain-intrinsic-size:1px 430px;
+}
+.card::after{
+  content:""; position:absolute; inset:0; pointer-events:none;
+  background:linear-gradient(115deg, transparent 40%, rgba(217,184,119,.22) 50%, transparent 60%);
+  background-size:250% 250%; background-position:150% 150%; transition:background-position 1s var(--ease);
+}
+.card:hover::after{ background-position:-50% -50%; }
+.card:hover{ transform:translateY(-7px); box-shadow:0 24px 40px rgba(13,32,56,.18); border-color:var(--gold); }
+@keyframes cardIn{ from{opacity:0; transform:translateY(22px);} to{opacity:1; transform:translateY(0);} }
+
+.sticker{
+  position:absolute; top:16px; right:-7px; z-index:2;
+  padding:5px 16px 5px 12px; font-family:var(--font-label); font-size:.66rem;
+  letter-spacing:.09em; text-transform:uppercase; color:#fff;
+  box-shadow:0 4px 10px rgba(0,0,0,.28);
+  clip-path:polygon(0 0, 100% 0, 100% 100%, 8px 100%, 0 70%);
+  animation:stickerIn .5s .1s var(--ease-spring) backwards;
+}
+@keyframes stickerIn{ from{ transform:translateX(14px); opacity:0; } to{ transform:translateX(0); opacity:1; } }
+.sticker-ivy{ background:var(--oxblood); }
+.sticker-top{ background:var(--gold); color:var(--navy-deep); }
+.sticker-publicElite{ background:var(--ivy); }
+.sticker-liberalArts{ background:var(--plum); }
+
+.card-top{ padding:22px 22px 14px; display:flex; gap:14px; align-items:flex-start; border-bottom:1px dashed var(--parchment-line); }
+.crest-badge{
+  width:54px;height:54px; border-radius:50%; flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-display); font-weight:700; font-size:1.1rem; color:#fff;
+  border:2px solid rgba(255,255,255,.55);
+  box-shadow:inset 0 0 0 2px rgba(0,0,0,.12), 0 3px 8px rgba(0,0,0,.18);
+  position:relative; cursor:pointer; transition:transform .25s var(--ease-spring); user-select:none;
+}
+.crest-badge:hover{ transform:scale(1.08) rotate(-3deg); }
+.crest-badge:active{ transform:scale(.92); }
+.crest-badge.selected{ box-shadow:0 0 0 3px var(--parchment), 0 0 0 6px var(--gold), 0 3px 10px rgba(0,0,0,.25); }
+.crest-badge.selected::before{
+  content:"✓"; position:absolute; inset:0; display:flex;align-items:center;justify-content:center;
+  background:rgba(0,0,0,.35); border-radius:50%; font-size:1.2rem; color:#fff;
+}
+
+.card-title h3{ font-size:1.08rem; line-height:1.25; }
+.card-title .loc{ margin-top:4px; font-size:.88rem; color:#5b5646; font-style:italic; }
+.card-title .rank{
+  display:inline-block; margin-top:7px; font-family:var(--font-label); font-size:.7rem;
+  letter-spacing:.1em; color:var(--oxblood); border:1px solid var(--oxblood); padding:2px 8px; border-radius:2px;
+}
+
+.card-stats{ padding:14px 22px; display:grid; grid-template-columns:1fr 1fr; gap:10px 16px; }
+.stat-item .label{ font-size:.66rem; display:block; margin-bottom:2px; }
+.stat-item .value{ font-family:var(--font-display); font-size:.98rem; color:var(--navy); }
+
+.score-row{ display:flex; gap:16px; padding:2px 22px 14px; }
+.score-item{ flex:1; }
+.score-item .label{ font-size:.64rem; }
+.score-bar{ height:6px; border-radius:3px; background:var(--parchment-dark); overflow:hidden; margin-top:5px; }
+.score-fill{ height:100%; border-radius:3px; background:linear-gradient(90deg,var(--gold),var(--oxblood)); width:0%; transition:width 1s var(--ease); }
+.score-value{ font-size:.74rem; font-family:var(--font-display); color:var(--navy); margin-top:3px; display:block; }
+
+.card-majors{ padding:0 22px 16px; font-size:.86rem; color:#4b4536; }
+.card-majors .label{ font-size:.66rem; display:block; margin-bottom:6px; }
+.chip-row{ display:flex; flex-wrap:wrap; gap:6px; }
+.chip{ background:var(--parchment-dark); border:1px solid var(--parchment-line); border-radius:2px; padding:3px 9px; font-size:.78rem; }
+
+.card-actions{ display:flex; border-top:1px solid var(--parchment-line); }
+.card-actions button{ flex:1; padding:12px 8px; background:transparent; border:none; font-family:var(--font-label); font-size:.76rem; letter-spacing:.08em; color:var(--navy); transition:background .25s var(--ease), color .25s var(--ease); }
+.card-actions button:hover{ background:var(--navy); color:var(--parchment); }
+.card-actions button + button{ border-left:1px solid var(--parchment-line); }
+.card-actions a{ text-decoration:none; }
+
+.empty-state{ grid-column:1/-1; text-align:center; padding:70px 20px; color:#6c6551; font-style:italic; }
+
+.load-more-wrap{ text-align:center; padding:6px 24px 70px; }
+.btn-loadmore{
+  background:var(--navy); color:var(--parchment); border:1px solid var(--gold);
+  padding:13px 34px; border-radius:3px; font-family:var(--font-label); letter-spacing:.1em; font-size:.86rem;
+  transition:background .25s var(--ease), transform .2s var(--ease);
+}
+.btn-loadmore:hover{ background:var(--oxblood); transform:translateY(-2px); }
+
+/* ============================================================
+   MAP VIEW
+   ============================================================ */
+.map-section{ display:none; padding:0 24px 90px; max-width:1280px; margin:0 auto; }
+.map-section.active{ display:block; }
+.map-frame{
+  position:relative; width:100%; padding-top:56%;
+  background:
+    repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(124,36,48,.05) 40px),
+    repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(124,36,48,.05) 40px),
+    #fbf6e9;
+  border:1px solid var(--parchment-line); border-radius:6px; box-shadow:var(--shadow-soft); overflow:hidden;
+}
+.map-frame .compass{ position:absolute; top:16px; left:16px; font-family:var(--font-label); font-size:.72rem; letter-spacing:.14em; color:var(--oxblood); }
+.map-caption{ position:absolute; bottom:14px; right:18px; font-family:var(--font-body); font-style:italic; font-size:.8rem; color:#8a836a; }
+.pin{ position:absolute; width:12px;height:12px; transform:translate(-50%,-100%); cursor:pointer; }
+.pin .dot{
+  width:10px;height:10px; border-radius:50% 50% 50% 0; transform:rotate(-45deg);
+  border:1.5px solid var(--parchment); box-shadow:0 2px 5px rgba(0,0,0,.3); margin:0 auto;
+  transition:transform .3s var(--ease-spring);
+}
+.pin:hover .dot{ transform:rotate(-45deg) scale(1.5); }
+.pin .tag{
+  position:absolute; bottom:18px; left:50%; transform:translateX(-50%) translateY(6px);
+  background:var(--navy); color:var(--parchment); font-family:var(--font-label); font-size:.68rem;
+  letter-spacing:.07em; padding:4px 9px; border-radius:2px; white-space:nowrap;
+  opacity:0; pointer-events:none; transition:opacity .2s var(--ease), transform .2s var(--ease); z-index:5;
+}
+.pin:hover .tag{ opacity:1; transform:translateX(-50%) translateY(0); }
+
+/* ============================================================
+   COMPARE TRAY
+   ============================================================ */
+.compare-tray{
+  position:fixed; left:50%; bottom:-160px; transform:translateX(-50%); width:min(720px,94%);
+  background:var(--navy); color:var(--parchment); border:1px solid var(--gold); border-radius:8px 8px 0 0;
+  padding:16px 22px; display:flex; align-items:center; gap:16px; z-index:300;
+  box-shadow:var(--shadow-deep); transition:bottom .5s var(--ease-spring);
+}
+.compare-tray.show{ bottom:0; }
+.compare-tray .label{ color:var(--gold-light); }
+.tray-chips{ display:flex; gap:8px; flex:1; flex-wrap:wrap; }
+.tray-chip{ background:var(--navy-deep); border:1px solid var(--gold-light); border-radius:3px; padding:5px 10px; font-size:.82rem; display:flex; align-items:center; gap:6px; }
+.tray-chip button{ background:none;border:none;color:var(--gold-light);font-size:1rem;line-height:1;padding:0; }
+.compare-tray .btn-compare{
+  background:var(--oxblood); color:#fff; border:1px solid var(--gold-light); padding:9px 18px; border-radius:3px;
+  font-family:var(--font-label); letter-spacing:.08em; font-size:.8rem; transition:background .25s var(--ease), transform .2s var(--ease); white-space:nowrap;
+}
+.compare-tray .btn-compare:hover{ background:var(--oxblood-deep); transform:translateY(-2px); }
+.compare-tray .btn-clear{ background:none;border:1px solid var(--parchment); color:var(--parchment); padding:9px 14px; border-radius:3px; font-size:.76rem; font-family:var(--font-label); letter-spacing:.06em; }
+
+/* ============================================================
+   MODALS
+   ============================================================ */
+.overlay{
+  position:fixed; inset:0; background:rgba(8,21,36,.62); backdrop-filter:blur(3px); z-index:600;
+  display:flex; align-items:center; justify-content:center; padding:24px; opacity:0; pointer-events:none; transition:opacity .3s var(--ease);
+}
+.overlay.show{ opacity:1; pointer-events:auto; }
+.modal{
+  background:var(--parchment); max-width:760px; width:100%; max-height:88vh; overflow-y:auto;
+  border-radius:6px; border:2px solid var(--gold); box-shadow:var(--shadow-deep);
+  transform:scale(.9) translateY(20px); opacity:0; transition:transform .38s var(--ease-spring), opacity .3s var(--ease);
+}
+.overlay.show .modal{ transform:scale(1) translateY(0); opacity:1; }
+.modal-header{ background:var(--navy); color:var(--parchment); padding:26px 30px; display:flex; gap:16px; align-items:center; position:relative; }
+.modal-close{
+  position:absolute; top:14px; right:16px; width:32px;height:32px; border-radius:50%; background:transparent;
+  border:1px solid var(--gold-light); color:var(--gold-light); font-size:1.1rem; line-height:1;
+  transition:background .2s var(--ease), transform .2s var(--ease);
+}
+.modal-close:hover{ background:var(--oxblood); transform:rotate(90deg); }
+.modal-header .crest-badge{ width:62px;height:62px; font-size:1.25rem; cursor:default; }
+.modal-header h3{ color:var(--parchment); font-size:1.4rem; }
+.modal-header .loc{ color:var(--gold-pale); font-style:italic; font-size:.92rem; margin-top:4px; }
+.modal-header .badges-row{ margin-top:8px; display:flex; gap:8px; flex-wrap:wrap; }
+.mini-badge{ font-family:var(--font-label); font-size:.68rem; letter-spacing:.08em; padding:2px 9px; border-radius:2px; text-transform:uppercase; }
+
+.modal-body{ padding:26px 30px 30px; }
+.modal-stats{ display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:16px; padding-bottom:22px; border-bottom:1px dashed var(--parchment-line); margin-bottom:22px; }
+.modal-stats .stat-item .value{ font-size:1.15rem; }
+.modal-scores{ display:flex; gap:26px; margin-bottom:22px; flex-wrap:wrap; }
+.modal-scores .score-item{ min-width:160px; }
+
+.modal-section{ margin-bottom:24px; }
+.modal-section h4{ font-family:var(--font-label); font-size:.9rem; letter-spacing:.1em; color:var(--oxblood); margin-bottom:12px; text-transform:uppercase; }
+.tips-list{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:10px; }
+.tips-list li{ position:relative; padding-left:26px; font-size:.96rem; line-height:1.55; }
+.tips-list li::before{ content:"✦"; position:absolute; left:0; top:1px; color:var(--gold); }
+.modal-actions{ display:flex; gap:12px; margin-top:6px; flex-wrap:wrap; }
+.btn-formal{
+  display:inline-flex; align-items:center; gap:8px; padding:11px 22px; border-radius:3px;
+  font-family:var(--font-label); letter-spacing:.08em; font-size:.82rem; text-decoration:none;
+  transition:background .25s var(--ease), transform .2s var(--ease), color .25s var(--ease);
+}
+.btn-formal.primary{ background:var(--oxblood); color:#fff; border:1px solid var(--oxblood-deep); }
+.btn-formal.primary:hover{ background:var(--oxblood-deep); transform:translateY(-2px); }
+.btn-formal.ghost{ background:transparent; color:var(--navy); border:1px solid var(--navy); }
+.btn-formal.ghost:hover{ background:var(--navy); color:var(--parchment); }
+
+.compare-table{ width:100%; border-collapse:collapse; font-size:.9rem; }
+.compare-table th, .compare-table td{ padding:9px 11px; border-bottom:1px solid var(--parchment-line); text-align:left; vertical-align:top; }
+.compare-table th{ font-family:var(--font-label); letter-spacing:.06em; color:var(--oxblood); font-size:.76rem; text-transform:uppercase; }
+.compare-table td.attr-label{ font-family:var(--font-label); color:var(--navy); letter-spacing:.04em; white-space:nowrap; font-size:.74rem; text-transform:uppercase; }
+.compare-table td.college-name{ font-family:var(--font-display); font-weight:700; }
+
+/* ============================================================
+   TOAST
+   ============================================================ */
+.toast{
+  position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(20px);
+  background:var(--navy); color:var(--parchment); border:1px solid var(--gold); padding:12px 22px;
+  border-radius:4px; font-size:.9rem; font-style:italic; opacity:0; pointer-events:none;
+  transition:opacity .3s var(--ease), transform .3s var(--ease); z-index:900;
+}
+.toast.show{ opacity:1; transform:translateX(-50%) translateY(0); }
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+footer{ background:var(--navy-deep); color:var(--gold-pale); text-align:center; padding:40px 24px 34px; font-size:.86rem; }
+footer .label{ color:var(--gold-light); }
+footer p{ margin-top:10px; line-height:1.6; opacity:.85; max-width:660px; margin-left:auto; margin-right:auto;}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width:640px){
+  body{ font-size:16.5px; }
+  .hero{ padding:78px 18px 54px; }
+  .hero-stats{ gap:24px; }
+  .audio-panel .audio-label{ display:none; }
+  .audio-panel input[type=range]{ width:52px; }
+  .controls{ padding:8px 14px; }
+  .controls select{ max-width:none; flex:1 1 46%; }
+  .gallery{ padding:6px 16px 40px; grid-template-columns:1fr; }
+  .modal-header{ flex-wrap:wrap; }
+  .compare-tray{ width:96%; flex-wrap:wrap; padding:14px 16px; }
+}
+
+@media (prefers-reduced-motion: reduce){
+  *, *::before, *::after{ animation-duration:.001s !important; transition-duration:.001s !important; }
+}
+</style>
+</head>
+<body>
+
+<div class="audio-panel" id="audioPanel">
+  <button class="audio-toggle" id="audioToggle" aria-label="Toggle ambient music">
+    <div class="eq-bars"><span></span><span></span><span></span></div>
+  </button>
+  <span class="audio-label">Chamber&nbsp;Music</span>
+  <input type="range" id="volumeSlider" min="0" max="100" value="35" aria-label="Volume">
+</div>
+
+<header class="hero">
+  <div class="crest"><span>CR</span></div>
+  <h1>The Collegiate Registry</h1>
+  <p class="subtitle">An Illustrated Survey of 250 Leading American Institutions of Higher Learning</p>
+  <p class="motto">Scientia &middot; Veritas &middot; Excellentia</p>
+  <div class="hero-stats">
+    <div class="hero-stat"><b id="statCount">250</b><span>Institutions Catalogued</span></div>
+    <div class="hero-stat"><b id="statIvy">8</b><span>Ivy League Members</span></div>
+    <div class="hero-stat"><b id="statTop">&mdash;</b><span>Ranked in the Top 25</span></div>
+    <div class="hero-stat"><b id="statAvgAccept">&mdash;</b><span>Mean Rate of Admission</span></div>
+  </div>
+</header>
+
+<div class="controls-wrap">
+  <div class="controls">
+    <div class="search-field">
+      <input type="text" id="searchInput" placeholder="Search by institution, city, or state&hellip;">
+    </div>
+    <select id="filterType">
+      <option value="all">All Types</option>
+      <option value="ivy">Ivy League</option>
+      <option value="top">Top 25</option>
+      <option value="publicElite">Public Elite</option>
+      <option value="liberalArts">Liberal Arts Elite</option>
+      <option value="none">Other Notable</option>
+    </select>
+    <select id="filterRegion">
+      <option value="all">All Regions</option>
+      <option value="Northeast">Northeast</option>
+      <option value="Midwest">Midwest</option>
+      <option value="South">South</option>
+      <option value="West">West</option>
+    </select>
+    <select id="filterSize">
+      <option value="all">All Enrollments</option>
+      <option value="small">Small (&lt; 5,000)</option>
+      <option value="medium">Medium (5,000&ndash;20,000)</option>
+      <option value="large">Large (&gt; 20,000)</option>
+    </select>
+    <select id="filterTuition">
+      <option value="all">All Tuition Tiers</option>
+      <option value="low">Under $20,000</option>
+      <option value="mid">$20,000&ndash;$55,000</option>
+      <option value="high">Over $55,000</option>
+    </select>
+    <select id="sortBy">
+      <option value="fame">Sort: Fame</option>
+      <option value="selectivity">Sort: Selectivity</option>
+      <option value="quality">Sort: Quality Score</option>
+      <option value="performance">Sort: Student Performance</option>
+      <option value="tuition">Sort: Tuition</option>
+      <option value="population">Sort: Enrollment</option>
+      <option value="name">Sort: Name (A&ndash;Z)</option>
+    </select>
+    <div class="view-toggle">
+      <button id="viewGalleryBtn" class="active">Gallery</button>
+      <button id="viewMapBtn">Atlas</button>
+    </div>
+    <div class="result-count" id="resultCount">250 institutions shown</div>
+  </div>
+</div>
+
+<div class="legend">
+  <span class="legend-item"><span class="legend-dot" style="background:var(--oxblood);"></span>Ivy League</span>
+  <span class="legend-item"><span class="legend-dot" style="background:var(--gold);"></span>Top 25</span>
+  <span class="legend-item"><span class="legend-dot" style="background:var(--ivy);"></span>Public Elite</span>
+  <span class="legend-item"><span class="legend-dot" style="background:var(--plum);"></span>Liberal Arts Elite</span>
+</div>
+
+<section class="section-head">
+  <span class="label">Chapter One</span>
+  <h2>The Gallery of Institutions</h2>
+  <p>Kindly peruse each dossier below. Select the seal upon a card to mark an institution for comparison, up to four at a time.</p>
+  <div class="ornament-rule" data-reveal></div>
+</section>
+
+<main class="gallery" id="gallery"></main>
+<div class="load-more-wrap" id="loadMoreWrap" style="display:none;">
+  <button class="btn-loadmore" id="loadMoreBtn">Reveal More Institutions</button>
+</div>
+
+<section class="map-section" id="mapSection">
+  <div class="section-head" style="margin-top:0;">
+    <span class="label">Chapter Two</span>
+    <h2>An Atlas of Their Situation</h2>
+    <p>Each pin denotes an institution's seat, coloured by its distinction. Hover for its name; click to open its dossier.</p>
+  </div>
+  <div class="map-frame" id="mapFrame">
+    <span class="compass">N</span>
+    <span class="map-caption">A schematic projection of the Continental United States</span>
+  </div>
+</section>
+
+<div class="compare-tray" id="compareTray">
+  <span class="label">Compare&nbsp;&mdash;</span>
+  <div class="tray-chips" id="trayChips"></div>
+  <button class="btn-clear" id="clearCompare">Clear</button>
+  <button class="btn-compare" id="openCompare">View Comparison</button>
+</div>
+
+<div class="overlay" id="detailOverlay">
+  <div class="modal" id="detailModal"></div>
+</div>
+
+<div class="overlay" id="compareOverlay">
+  <div class="modal" id="compareModal" style="max-width:980px;"></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<footer>
+  <span class="label">A Closing Note</span>
+  <p>All figures presented &mdash; rates of admission, examination ranges, tuition, enrollment, ranking, and the Quality and Student Performance scores &mdash; are approximate, illustrative composites generated for the purpose of demonstration, and do not represent official institutional data. Prospective applicants are earnestly encouraged to consult each institution's official register for precise and current particulars.</p>
+</footer>
+
+<script>
+/* ============================================================
+   DATA  (250 institutions)
+   ============================================================ */
+const COLLEGES = [{"id":"harvard","name":"Harvard University","city":"Cambridge","state":"MA","lat":42.374,"lon":-71.118,"acceptance":3.2,"satLow":1490,"satHigh":1580,"actLow":33,"actHigh":36,"tuition":56550,"population":7110,"ranking":1,"majors":["Economics","Government","Computer Science","Applied Mathematics"],"website":"https://www.harvard.edu","badge":"ivy","founded":1636,"quality":99,"performance":91,"region":"Northeast","crestHue1":352,"crestHue2":18,"tips":["Present a transcript of uncompromising rigor across at least four core disciplines, including advanced mathematics and laboratory science.","Cultivate genuine depth in one or two pursuits rather than superficial breadth across many; sustained achievement is prized above mere participation.","Compose personal essays that reveal authentic intellectual curiosity and character, not merely a catalogue of accomplishments.","Secure letters of recommendation from instructors who can speak with particularity to your habits of mind and contribution to the classroom."]},{"id":"yale","name":"Yale University","city":"New Haven","state":"CT","lat":41.316,"lon":-72.929,"acceptance":3.7,"satLow":1500,"satHigh":1580,"actLow":34,"actHigh":36,"tuition":64700,"population":6600,"ranking":2,"majors":["Political Science","History","Molecular Biology","Economics"],"website":"https://www.yale.edu","badge":"ivy","founded":1701,"quality":99,"performance":95,"region":"Northeast","crestHue1":346,"crestHue2":12,"tips":["Demonstrate a habit of independent inquiry; Yale's residential college system rewards those who will contribute actively to intellectual community life.","Approach the supplemental essays as an opportunity for candour rather than performance; admissions readers value an authentic voice.","Pursue leadership defined by sustained responsibility and impact, rather than titles collected for their own sake.","Excel within a demanding secondary curriculum, favouring depth in the humanities or sciences aligned with your intended course of study."]},{"id":"princeton","name":"Princeton University","city":"Princeton","state":"NJ","lat":40.343,"lon":-74.659,"acceptance":3.9,"satLow":1500,"satHigh":1580,"actLow":34,"actHigh":36,"tuition":59710,"population":5600,"ranking":3,"majors":["Public and International Affairs","Computer Science","Physics","Economics"],"website":"https://www.princeton.edu","badge":"ivy","founded":1746,"quality":99,"performance":98,"region":"Northeast","crestHue1":4,"crestHue2":30,"tips":["Undertake original research or independent projects where possible; Princeton's senior thesis tradition rewards demonstrated scholarly initiative.","Write with precision and restraint; admissions officers favour essays of substance over ornamentation.","Show consistent academic excellence, particularly in mathematics and writing, the two disciplines Princeton weighs most heavily.","Engage meaningfully with your community over years, not months; continuity of commitment speaks louder than a lengthy roster of activities."]},{"id":"columbia","name":"Columbia University","city":"New York","state":"NY","lat":40.807,"lon":-73.962,"acceptance":3.9,"satLow":1500,"satHigh":1570,"actLow":34,"actHigh":35,"tuition":68400,"population":8600,"ranking":4,"majors":["Financial Economics","Computer Science","English","Political Science"],"website":"https://www.columbia.edu","badge":"ivy","founded":1754,"quality":98,"performance":99,"region":"Northeast","crestHue1":5,"crestHue2":31,"tips":["Articulate, with specificity, why Columbia's Core Curriculum and urban setting suit your particular intellectual temperament.","Demonstrate comfort with a rigorous, discussion-based mode of learning through active classroom participation and written work.","Pursue experiences beyond the classroom &mdash; in the city, in research, in the arts &mdash; that reveal initiative and curiosity.","Maintain exemplary performance in a challenging course load; Columbia's selectivity leaves little room for uneven transcripts."]},{"id":"upenn","name":"University of Pennsylvania","city":"Philadelphia","state":"PA","lat":39.952,"lon":-75.193,"acceptance":5.7,"satLow":1500,"satHigh":1560,"actLow":34,"actHigh":35,"tuition":66744,"population":10500,"ranking":5,"majors":["Finance (Wharton)","Nursing","Bioengineering","Communication"],"website":"https://www.upenn.edu","badge":"ivy","founded":1740,"quality":97,"performance":98,"region":"Northeast","crestHue1":2,"crestHue2":28,"tips":["Identify the particular one of Penn's four undergraduate schools that matches your ambitions, and speak to it directly in your essays.","For Wharton applicants especially, show quantitative fluency and a demonstrated interest in commerce, policy, or entrepreneurship.","Cultivate interdisciplinary interests; Penn prizes candidates who move fluidly between the liberal arts and professional application.","Seek out research, internships, or ventures that reflect initiative taken independent of formal schooling."]},{"id":"brown","name":"Brown University","city":"Providence","state":"RI","lat":41.826,"lon":-71.403,"acceptance":5.1,"satLow":1470,"satHigh":1560,"actLow":33,"actHigh":35,"tuition":68162,"population":7200,"ranking":6,"majors":["Computer Science","International & Public Affairs","Biology","Applied Mathematics-Economics"],"website":"https://www.brown.edu","badge":"ivy","founded":1764,"quality":96,"performance":90,"region":"Northeast","crestHue1":359,"crestHue2":25,"tips":["Speak candidly to Brown's Open Curriculum: applicants who articulate a genuine plan for self-directed study fare especially well.","Favour authenticity and intellectual risk-taking in your essays over conventional, safely polished narratives.","Show breadth of curiosity balanced by at least one area of demonstrated depth and sustained commitment.","Illustrate how you contribute to a community &mdash; Brown's small, close-knit undergraduate body values collaborative spirit."]},{"id":"dartmouth","name":"Dartmouth College","city":"Hanover","state":"NH","lat":43.703,"lon":-72.288,"acceptance":6.2,"satLow":1460,"satHigh":1560,"actLow":33,"actHigh":35,"tuition":66369,"population":4500,"ranking":7,"majors":["Economics","Government","Engineering Sciences","Computer Science"],"website":"https://home.dartmouth.edu","badge":"ivy","founded":1769,"quality":99,"performance":92,"region":"Northeast","crestHue1":331,"crestHue2":357,"tips":["Convey genuine enthusiasm for a small, close residential community set in a rural landscape; fit matters greatly here.","Demonstrate well-rounded engagement &mdash; athletics, the arts, or outdoor pursuits alongside serious scholarship.","Write essays with warmth and personal voice; Dartmouth's admissions officers are known to prize sincerity over polish.","Excel in a rigorous curriculum while showing capacity for leadership within teams, clubs, or community service."]},{"id":"cornell","name":"Cornell University","city":"Ithaca","state":"NY","lat":42.444,"lon":-76.483,"acceptance":7.5,"satLow":1440,"satHigh":1550,"actLow":33,"actHigh":35,"tuition":68650,"population":15700,"ranking":8,"majors":["Industrial & Labor Relations","Hotel Administration","Engineering","Agricultural Sciences"],"website":"https://www.cornell.edu","badge":"ivy","founded":1865,"quality":99,"performance":96,"region":"Northeast","crestHue1":331,"crestHue2":357,"tips":["Apply directly to one of Cornell's distinct undergraduate colleges, and tailor your essays precisely to that college's mission.","Demonstrate specific, substantive interest in your chosen field; Cornell's reviewers favour applicants with clear direction.","Show sustained achievement in coursework relevant to your intended college, whether the sciences, the arts, or applied fields.","Highlight practical experience &mdash; research, apprenticeship, or independent projects &mdash; that evidences applied curiosity."]},{"id":"mit","name":"Massachusetts Institute of Technology","city":"Cambridge","state":"MA","lat":42.36,"lon":-71.092,"acceptance":4.0,"satLow":1520,"satHigh":1580,"actLow":35,"actHigh":36,"tuition":60156,"population":4600,"ranking":9,"majors":["Computer Science & Engineering","Mechanical Engineering","Mathematics","Physics"],"website":"https://www.mit.edu","badge":"top","founded":1861,"quality":98,"performance":95,"region":"Northeast","crestHue1":206,"crestHue2":232,"tips":["Assemble a portfolio of tangible making &mdash; competitions, research, or independent builds &mdash; that demonstrates hands-on problem-solving.","Pursue the deepest available coursework in mathematics and the physical sciences well beyond the standard sequence.","Respond to MIT's distinctive short-answer prompts with concrete, specific detail rather than general aspiration.","Show collaborative instinct; MIT's culture prizes those who build and solve alongside others, not merely alone."]},{"id":"stanford","name":"Stanford University","city":"Stanford","state":"CA","lat":37.427,"lon":-122.17,"acceptance":3.6,"satLow":1500,"satHigh":1570,"actLow":34,"actHigh":36,"tuition":62484,"population":8000,"ranking":10,"majors":["Computer Science","Human Biology","Symbolic Systems","Management Science & Engineering"],"website":"https://www.stanford.edu","badge":"top","founded":1885,"quality":95,"performance":99,"region":"West","crestHue1":196,"crestHue2":222,"tips":["Convey \"intellectual vitality\" through the required short essay &mdash; a specific idea or experience that genuinely animates you.","Demonstrate initiative through founding, building, or leading, an ethos consonant with Stanford's entrepreneurial culture.","Excel broadly while showing at least one area of exceptional, demonstrable strength.","Write the \"Roommate Letter\" essay with candour and personality; Stanford's readers value distinctive voice."]},{"id":"caltech","name":"California Institute of Technology","city":"Pasadena","state":"CA","lat":34.137,"lon":-118.125,"acceptance":2.9,"satLow":1530,"satHigh":1580,"actLow":35,"actHigh":36,"tuition":63255,"population":1000,"ranking":11,"majors":["Physics","Computer Science","Applied Mathematics","Chemical Engineering"],"website":"https://www.caltech.edu","badge":"top","founded":1891,"quality":99,"performance":88,"region":"West","crestHue1":180,"crestHue2":206,"tips":["Present exceptional, demonstrable mastery of mathematics and the physical sciences; Caltech's standard here is exacting.","Pursue recognised competitions &mdash; Olympiad mathematics or science, research symposia &mdash; that substantiate technical distinction.","Show genuine comfort with a small, intensely rigorous community; Caltech's undergraduate body is deliberately compact.","Convey authentic passion for problem-solving itself, not merely its rewards; Caltech seeks scientists in formation."]},{"id":"uchicago","name":"University of Chicago","city":"Chicago","state":"IL","lat":41.789,"lon":-87.599,"acceptance":4.8,"satLow":1500,"satHigh":1570,"actLow":34,"actHigh":35,"tuition":66939,"population":7500,"ranking":12,"majors":["Economics","Mathematics","Political Science","Molecular Engineering"],"website":"https://www.uchicago.edu","badge":"top","founded":1890,"quality":97,"performance":95,"region":"Midwest","crestHue1":185,"crestHue2":211,"tips":["Engage seriously and playfully with UChicago's famously \"uncommon\" essay prompts; original thought is prized above safe convention.","Demonstrate a rigorous, discussion-oriented intellect suited to the Core Curriculum's demanding seminar tradition.","Show genuine delight in ideas for their own sake, evidenced through reading, debate, or independent inquiry.","Maintain outstanding academic performance in the most challenging courses your school offers."]},{"id":"duke","name":"Duke University","city":"Durham","state":"NC","lat":36.001,"lon":-78.938,"acceptance":6.0,"satLow":1470,"satHigh":1570,"actLow":33,"actHigh":35,"tuition":65762,"population":6700,"ranking":13,"majors":["Public Policy","Biomedical Engineering","Economics","Computer Science"],"website":"https://www.duke.edu","badge":"top","founded":1838,"quality":96,"performance":98,"region":"South","crestHue1":218,"crestHue2":244,"tips":["Demonstrate genuine engagement with community and service; Duke's admissions process weighs character alongside intellect.","Show a balance of academic excellence and sustained extracurricular leadership, particularly across several years.","Approach the supplemental essays with authenticity, illustrating specific fit with Duke's collaborative, spirited culture.","Pursue depth in the sciences if inclined toward Duke's celebrated pre-medical and engineering pathways."]},{"id":"northwestern","name":"Northwestern University","city":"Evanston","state":"IL","lat":42.056,"lon":-87.675,"acceptance":7.2,"satLow":1450,"satHigh":1560,"actLow":33,"actHigh":35,"tuition":65997,"population":8600,"ranking":14,"majors":["Journalism (Medill)","Radio/Television/Film","Economics","Computer Science"],"website":"https://www.northwestern.edu","badge":"top","founded":1851,"quality":99,"performance":92,"region":"Midwest","crestHue1":212,"crestHue2":238,"tips":["Articulate precise interest in one of Northwestern's distinguished professional schools, such as Medill or the Bienen School.","Show creative and academic accomplishment together; Northwestern's culture bridges rigorous scholarship and the performing arts.","Demonstrate collaborative leadership within teams, ensembles, or publications over a sustained period.","Write with specificity about why Northwestern's particular blend of research and quarter-system curriculum suits you."]},{"id":"jhu","name":"Johns Hopkins University","city":"Baltimore","state":"MD","lat":39.329,"lon":-76.62,"acceptance":6.5,"satLow":1500,"satHigh":1560,"actLow":34,"actHigh":35,"tuition":64110,"population":6300,"ranking":15,"majors":["Biomedical Engineering","Public Health Studies","Neuroscience","International Studies"],"website":"https://www.jhu.edu","badge":"top","founded":1876,"quality":93,"performance":93,"region":"South","crestHue1":186,"crestHue2":212,"tips":["Demonstrate substantive research experience where possible; Hopkins, America's first research university, prizes inquiry.","Show genuine interest in the sciences or medicine if applying with pre-health intent, supported by relevant coursework.","Write essays that reveal intellectual seriousness and a specific reason for pursuing your chosen field at Hopkins.","Maintain a rigorous transcript with strength across mathematics and the sciences in particular."]},{"id":"georgetown","name":"Georgetown University","city":"Washington","state":"DC","lat":38.907,"lon":-77.073,"acceptance":12.0,"satLow":1440,"satHigh":1540,"actLow":32,"actHigh":35,"tuition":65290,"population":7500,"ranking":16,"majors":["International Politics (SFS)","Finance","Government","Nursing"],"website":"https://www.georgetown.edu","badge":"top","founded":1789,"quality":98,"performance":93,"region":"South","crestHue1":218,"crestHue2":244,"tips":["Note that Georgetown maintains its own distinct application, separate from the Common Application; prepare accordingly.","Demonstrate global and civic engagement, particularly for the School of Foreign Service, through language study or public affairs interest.","Show a Jesuit-tradition commitment to service and ethical reflection alongside academic accomplishment.","Apply directly to one of Georgetown's four undergraduate schools, tailoring essays to that school's specific mission."]},{"id":"vanderbilt-university","name":"Vanderbilt University","city":"Nashville","state":"TN","lat":36.145,"lon":-86.803,"acceptance":17.0,"satLow":1415,"satHigh":1584,"actLow":28,"actHigh":32,"tuition":56100,"population":18476,"majors":["Business Administration","Biology","Computer Science"],"website":"https://www.vanderbilt.edu","badge":"top","founded":1873,"ranking":17,"quality":98,"performance":87,"region":"South","crestHue1":203,"crestHue2":229},{"id":"rice-university","name":"Rice University","city":"Houston","state":"TX","lat":29.717,"lon":-95.401,"acceptance":7.3,"satLow":1365,"satHigh":1514,"actLow":28,"actHigh":33,"tuition":57673,"population":8973,"majors":["International Relations","Finance","Neuroscience"],"website":"https://www.rice.edu","badge":"top","founded":1912,"ranking":18,"quality":96,"performance":95,"region":"South","crestHue1":208,"crestHue2":234},{"id":"university-of-notre-dame","name":"University of Notre Dame","city":"Notre Dame","state":"IN","lat":41.702,"lon":-86.238,"acceptance":7.6,"satLow":1395,"satHigh":1562,"actLow":32,"actHigh":36,"tuition":67299,"population":14179,"majors":["Business Administration","Economics","Computer Science"],"website":"https://www.nd.edu","badge":"top","founded":1842,"ranking":19,"quality":97,"performance":88,"region":"Midwest","crestHue1":184,"crestHue2":210},{"id":"university-of-california-berkeley","name":"University of California, Berkeley","city":"Berkeley","state":"CA","lat":37.871,"lon":-122.259,"acceptance":5.4,"satLow":1394,"satHigh":1548,"actLow":32,"actHigh":35,"tuition":31645,"population":32845,"majors":["International Relations","Political Science","Business Administration"],"website":"https://www.berkeley.edu","badge":"top","founded":1868,"ranking":20,"quality":91,"performance":87,"region":"West","crestHue1":205,"crestHue2":231},{"id":"university-of-california-los-angeles","name":"University of California, Los Angeles","city":"Los Angeles","state":"CA","lat":34.069,"lon":-118.445,"acceptance":16.6,"satLow":1341,"satHigh":1505,"actLow":31,"actHigh":36,"tuition":39403,"population":23818,"majors":["Neuroscience","Biology","Business Administration"],"website":"https://www.ucla.edu","badge":"top","founded":1919,"ranking":21,"quality":93,"performance":92,"region":"West","crestHue1":189,"crestHue2":215},{"id":"emory-university","name":"Emory University","city":"Atlanta","state":"GA","lat":33.792,"lon":-84.324,"acceptance":15.5,"satLow":1417,"satHigh":1568,"actLow":32,"actHigh":36,"tuition":68580,"population":11966,"majors":["Political Science","Neuroscience","Economics"],"website":"https://www.emory.edu","badge":"top","founded":1836,"ranking":22,"quality":91,"performance":94,"region":"South","crestHue1":191,"crestHue2":217},{"id":"university-of-southern-california","name":"University of Southern California","city":"Los Angeles","state":"CA","lat":34.021,"lon":-118.285,"acceptance":15.0,"satLow":1359,"satHigh":1501,"actLow":30,"actHigh":34,"tuition":34979,"population":15331,"majors":["Finance","Mechanical Engineering","Psychology"],"website":"https://www.usc.edu","badge":"top","founded":1880,"ranking":23,"quality":97,"performance":89,"region":"West","crestHue1":218,"crestHue2":244},{"id":"carnegie-mellon-university","name":"Carnegie Mellon University","city":"Pittsburgh","state":"PA","lat":40.443,"lon":-79.943,"acceptance":5.3,"satLow":1330,"satHigh":1488,"actLow":32,"actHigh":36,"tuition":61871,"population":15531,"majors":["Neuroscience","Psychology","Finance"],"website":"https://www.cmu.edu","badge":"top","founded":1900,"ranking":24,"quality":95,"performance":91,"region":"Northeast","crestHue1":195,"crestHue2":221},{"id":"university-of-michigan","name":"University of Michigan","city":"Ann Arbor","state":"MI","lat":42.278,"lon":-83.738,"acceptance":18.8,"satLow":1347,"satHigh":1494,"actLow":31,"actHigh":34,"tuition":31025,"population":26325,"majors":["Finance","Business Administration","Economics"],"website":"https://www.umich.edu","badge":"top","founded":1817,"ranking":25,"quality":96,"performance":95,"region":"Midwest","crestHue1":184,"crestHue2":210},{"id":"university-of-virginia","name":"University of Virginia","city":"Charlottesville","state":"VA","lat":38.035,"lon":-78.503,"acceptance":10.6,"satLow":1404,"satHigh":1526,"actLow":32,"actHigh":37,"tuition":36737,"population":19474,"majors":["Political Science","Psychology","Finance"],"website":"https://www.virginia.edu","badge":"top","founded":1819,"ranking":26,"quality":92,"performance":96,"region":"South","crestHue1":181,"crestHue2":207},{"id":"new-york-university","name":"New York University","city":"New York","state":"NY","lat":40.729,"lon":-73.996,"acceptance":6.8,"satLow":1331,"satHigh":1475,"actLow":29,"actHigh":33,"tuition":64164,"population":5544,"majors":["Economics","Finance","Psychology"],"website":"https://www.nyu.edu","badge":"top","founded":1831,"ranking":27,"quality":90,"performance":93,"region":"Northeast","crestHue1":215,"crestHue2":241},{"id":"university-of-north-carolina-at-chapel-hill","name":"University of North Carolina at Chapel Hill","city":"Chapel Hill","state":"NC","lat":35.905,"lon":-79.047,"acceptance":10.1,"satLow":1373,"satHigh":1512,"actLow":29,"actHigh":33,"tuition":17278,"population":26554,"majors":["International Relations","Finance","Political Science"],"website":"https://www.unc.edu","badge":"top","founded":1789,"ranking":28,"quality":94,"performance":85,"region":"South","crestHue1":190,"crestHue2":216},{"id":"wake-forest-university","name":"Wake Forest University","city":"Winston-Salem","state":"NC","lat":36.135,"lon":-80.277,"acceptance":16.6,"satLow":1362,"satHigh":1520,"actLow":28,"actHigh":32,"tuition":56998,"population":14816,"majors":["Neuroscience","Computer Science","Finance"],"website":"https://www.wfu.edu","badge":"top","founded":1834,"ranking":29,"quality":90,"performance":89,"region":"South","crestHue1":181,"crestHue2":207},{"id":"washington-university-in-st-louis","name":"Washington University in St. Louis","city":"St. Louis","state":"MO","lat":38.648,"lon":-90.305,"acceptance":19.9,"satLow":1379,"satHigh":1540,"actLow":29,"actHigh":32,"tuition":61445,"population":19574,"majors":["Business Administration","Mechanical Engineering","Biology"],"website":"https://www.wustl.edu","badge":"top","founded":1853,"ranking":30,"quality":95,"performance":96,"region":"Midwest","crestHue1":202,"crestHue2":228},{"id":"tufts-university","name":"Tufts University","city":"Medford","state":"MA","lat":42.408,"lon":-71.119,"acceptance":15.3,"satLow":1386,"satHigh":1507,"actLow":30,"actHigh":34,"tuition":68593,"population":13661,"majors":["Psychology","Neuroscience","Computer Science"],"website":"https://www.tufts.edu","badge":"top","founded":1852,"ranking":31,"quality":96,"performance":90,"region":"Northeast","crestHue1":181,"crestHue2":207},{"id":"university-of-florida","name":"University of Florida","city":"Gainesville","state":"FL","lat":29.648,"lon":-82.349,"acceptance":41.9,"satLow":1228,"satHigh":1384,"actLow":25,"actHigh":29,"tuition":29115,"population":39254,"majors":["Mechanical Engineering","Business Administration","Computer Science"],"website":"https://www.ufl.edu","badge":"publicElite","founded":1853,"ranking":32,"quality":95,"performance":85,"region":"South","crestHue1":137,"crestHue2":163},{"id":"georgia-institute-of-technology","name":"Georgia Institute of Technology","city":"Atlanta","state":"GA","lat":33.776,"lon":-84.396,"acceptance":34.0,"satLow":1191,"satHigh":1325,"actLow":27,"actHigh":30,"tuition":21474,"population":25683,"majors":["Chemistry","Journalism","Communications"],"website":"https://www.gatech.edu","badge":"publicElite","founded":1885,"ranking":33,"quality":89,"performance":94,"region":"South","crestHue1":120,"crestHue2":146},{"id":"university-of-texas-at-austin","name":"University of Texas at Austin","city":"Austin","state":"TX","lat":30.285,"lon":-97.733,"acceptance":53.2,"satLow":1209,"satHigh":1343,"actLow":24,"actHigh":29,"tuition":14657,"population":30227,"majors":["Mechanical Engineering","Nursing","Civil Engineering"],"website":"https://www.utexas.edu","badge":"publicElite","founded":1883,"ranking":34,"quality":89,"performance":86,"region":"South","crestHue1":138,"crestHue2":164},{"id":"university-of-washington","name":"University of Washington","city":"Seattle","state":"WA","lat":47.655,"lon":-122.308,"acceptance":23.4,"satLow":1223,"satHigh":1363,"actLow":28,"actHigh":32,"tuition":30319,"population":38578,"majors":["Mechanical Engineering","Nursing","Computer Science"],"website":"https://www.washington.edu","badge":"publicElite","founded":1861,"ranking":35,"quality":87,"performance":87,"region":"West","crestHue1":121,"crestHue2":147},{"id":"university-of-wisconsin-madison","name":"University of Wisconsin-Madison","city":"Madison","state":"WI","lat":43.076,"lon":-89.401,"acceptance":44.5,"satLow":1272,"satHigh":1434,"actLow":28,"actHigh":33,"tuition":26082,"population":37127,"majors":["Journalism","Communications","Agricultural Sciences"],"website":"https://www.wisc.edu","badge":"publicElite","founded":1848,"ranking":36,"quality":92,"performance":90,"region":"Midwest","crestHue1":122,"crestHue2":148},{"id":"university-of-illinois-urbana-champaign","name":"University of Illinois Urbana-Champaign","city":"Champaign","state":"IL","lat":40.109,"lon":-88.227,"acceptance":34.5,"satLow":1210,"satHigh":1352,"actLow":28,"actHigh":31,"tuition":17682,"population":28415,"majors":["Civil Engineering","Business Administration","Mechanical Engineering"],"website":"https://illinois.edu","badge":"publicElite","founded":1867,"ranking":37,"quality":92,"performance":89,"region":"Midwest","crestHue1":124,"crestHue2":150},{"id":"the-ohio-state-university","name":"The Ohio State University","city":"Columbus","state":"OH","lat":40.001,"lon":-83.019,"acceptance":20.7,"satLow":1191,"satHigh":1341,"actLow":26,"actHigh":30,"tuition":31049,"population":28159,"majors":["Kinesiology","Communications","Mechanical Engineering"],"website":"https://www.osu.edu","badge":"publicElite","founded":1870,"ranking":38,"quality":91,"performance":92,"region":"Midwest","crestHue1":127,"crestHue2":153},{"id":"pennsylvania-state-university","name":"Pennsylvania State University","city":"University Park","state":"PA","lat":40.798,"lon":-77.86,"acceptance":47.4,"satLow":1197,"satHigh":1331,"actLow":29,"actHigh":33,"tuition":22847,"population":33661,"majors":["Business Administration","Mechanical Engineering","Nursing"],"website":"https://www.psu.edu","badge":"publicElite","founded":1855,"ranking":39,"quality":93,"performance":88,"region":"Northeast","crestHue1":137,"crestHue2":163},{"id":"purdue-university","name":"Purdue University","city":"West Lafayette","state":"IN","lat":40.425,"lon":-86.912,"acceptance":32.7,"satLow":1203,"satHigh":1335,"actLow":24,"actHigh":27,"tuition":22431,"population":40058,"majors":["Mechanical Engineering","Business Administration","Civil Engineering"],"website":"https://www.purdue.edu","badge":"publicElite","founded":1869,"ranking":40,"quality":88,"performance":84,"region":"Midwest","crestHue1":150,"crestHue2":176},{"id":"texas-aandm-university","name":"Texas A&M University","city":"College Station","state":"TX","lat":30.615,"lon":-96.34,"acceptance":39.9,"satLow":1253,"satHigh":1394,"actLow":28,"actHigh":33,"tuition":15352,"population":33323,"majors":["Communications","Agricultural Sciences","Business Administration"],"website":"https://www.tamu.edu","badge":"publicElite","founded":1876,"ranking":41,"quality":88,"performance":83,"region":"South","crestHue1":132,"crestHue2":158},{"id":"university-of-maryland","name":"University of Maryland","city":"College Park","state":"MD","lat":38.988,"lon":-76.938,"acceptance":40.1,"satLow":1170,"satHigh":1319,"actLow":27,"actHigh":31,"tuition":22480,"population":31100,"majors":["Civil Engineering","Kinesiology","Chemistry"],"website":"https://www.umd.edu","badge":"publicElite","founded":1856,"ranking":42,"quality":88,"performance":92,"region":"South","crestHue1":150,"crestHue2":176},{"id":"rutgers-university","name":"Rutgers University","city":"New Brunswick","state":"NJ","lat":40.501,"lon":-74.447,"acceptance":33.2,"satLow":1250,"satHigh":1384,"actLow":27,"actHigh":31,"tuition":18639,"population":22060,"majors":["Chemistry","Kinesiology","Business Administration"],"website":"https://www.rutgers.edu","badge":"publicElite","founded":1766,"ranking":43,"quality":93,"performance":86,"region":"Northeast","crestHue1":146,"crestHue2":172},{"id":"university-of-pittsburgh","name":"University of Pittsburgh","city":"Pittsburgh","state":"PA","lat":40.444,"lon":-79.96,"acceptance":47.6,"satLow":1178,"satHigh":1342,"actLow":28,"actHigh":33,"tuition":17182,"population":35871,"majors":["Agricultural Sciences","Computer Science","Chemistry"],"website":"https://www.pitt.edu","badge":"publicElite","founded":1787,"ranking":44,"quality":86,"performance":81,"region":"Northeast","crestHue1":142,"crestHue2":168},{"id":"university-of-california-san-diego","name":"University of California, San Diego","city":"La Jolla","state":"CA","lat":32.881,"lon":-117.234,"acceptance":35.0,"satLow":1265,"satHigh":1403,"actLow":28,"actHigh":31,"tuition":17580,"population":18311,"majors":["Computer Science","Mechanical Engineering","Chemistry"],"website":"https://www.ucsd.edu","badge":"publicElite","founded":1960,"ranking":45,"quality":85,"performance":92,"region":"West","crestHue1":155,"crestHue2":181},{"id":"university-of-california-davis","name":"University of California, Davis","city":"Davis","state":"CA","lat":38.539,"lon":-121.755,"acceptance":27.7,"satLow":1221,"satHigh":1365,"actLow":27,"actHigh":30,"tuition":25250,"population":36769,"majors":["Journalism","Nursing","Chemistry"],"website":"https://www.ucdavis.edu","badge":"publicElite","founded":1905,"ranking":46,"quality":88,"performance":84,"region":"West","crestHue1":154,"crestHue2":180},{"id":"university-of-california-irvine","name":"University of California, Irvine","city":"Irvine","state":"CA","lat":33.64,"lon":-117.843,"acceptance":44.5,"satLow":1288,"satHigh":1423,"actLow":29,"actHigh":32,"tuition":33386,"population":43725,"majors":["Communications","Journalism","Chemistry"],"website":"https://www.uci.edu","badge":"publicElite","founded":1965,"ranking":47,"quality":86,"performance":84,"region":"West","crestHue1":121,"crestHue2":147},{"id":"university-of-california-santa-barbara","name":"University of California, Santa Barbara","city":"Santa Barbara","state":"CA","lat":34.414,"lon":-119.849,"acceptance":45.3,"satLow":1236,"satHigh":1363,"actLow":28,"actHigh":33,"tuition":17120,"population":43529,"majors":["Communications","Agricultural Sciences","Nursing"],"website":"https://www.ucsb.edu","badge":"publicElite","founded":1909,"ranking":48,"quality":91,"performance":84,"region":"West","crestHue1":155,"crestHue2":181},{"id":"university-of-arizona","name":"University of Arizona","city":"Tucson","state":"AZ","lat":32.232,"lon":-110.949,"acceptance":23.9,"satLow":1176,"satHigh":1323,"actLow":27,"actHigh":32,"tuition":20709,"population":40968,"majors":["Agricultural Sciences","Journalism","Nursing"],"website":"https://www.arizona.edu","badge":"publicElite","founded":1885,"ranking":49,"quality":87,"performance":82,"region":"West","crestHue1":132,"crestHue2":158},{"id":"arizona-state-university","name":"Arizona State University","city":"Tempe","state":"AZ","lat":33.424,"lon":-111.928,"acceptance":41.7,"satLow":1299,"satHigh":1451,"actLow":28,"actHigh":32,"tuition":32486,"population":31279,"majors":["Civil Engineering","Agricultural Sciences","Journalism"],"website":"https://www.asu.edu","badge":"publicElite","founded":1885,"ranking":50,"quality":90,"performance":84,"region":"West","crestHue1":157,"crestHue2":183},{"id":"university-of-colorado-boulder","name":"University of Colorado Boulder","city":"Boulder","state":"CO","lat":40.008,"lon":-105.267,"acceptance":24.7,"satLow":1193,"satHigh":1346,"actLow":28,"actHigh":31,"tuition":20727,"population":24381,"majors":["Agricultural Sciences","Communications","Nursing"],"website":"https://www.colorado.edu","badge":"publicElite","founded":1876,"ranking":51,"quality":89,"performance":83,"region":"West","crestHue1":154,"crestHue2":180},{"id":"university-of-minnesota-twin-cities","name":"University of Minnesota Twin Cities","city":"Minneapolis","state":"MN","lat":44.974,"lon":-93.235,"acceptance":45.5,"satLow":1215,"satHigh":1373,"actLow":29,"actHigh":34,"tuition":34844,"population":44124,"majors":["Agricultural Sciences","Civil Engineering","Nursing"],"website":"https://twin-cities.umn.edu","badge":"publicElite","founded":1851,"ranking":52,"quality":88,"performance":83,"region":"Midwest","crestHue1":123,"crestHue2":149},{"id":"michigan-state-university","name":"Michigan State University","city":"East Lansing","state":"MI","lat":42.701,"lon":-84.482,"acceptance":25.2,"satLow":1191,"satHigh":1319,"actLow":27,"actHigh":32,"tuition":27204,"population":36094,"majors":["Mechanical Engineering","Civil Engineering","Nursing"],"website":"https://msu.edu","badge":"publicElite","founded":1855,"ranking":53,"quality":86,"performance":91,"region":"Midwest","crestHue1":155,"crestHue2":181},{"id":"indiana-university-bloomington","name":"Indiana University Bloomington","city":"Bloomington","state":"IN","lat":39.166,"lon":-86.526,"acceptance":28.2,"satLow":1248,"satHigh":1368,"actLow":28,"actHigh":32,"tuition":38110,"population":33060,"majors":["Agricultural Sciences","Kinesiology","Nursing"],"website":"https://www.indiana.edu","badge":"publicElite","founded":1820,"ranking":54,"quality":89,"performance":80,"region":"Midwest","crestHue1":120,"crestHue2":146},{"id":"university-of-iowa","name":"University of Iowa","city":"Iowa City","state":"IA","lat":41.663,"lon":-91.542,"acceptance":52.5,"satLow":1245,"satHigh":1410,"actLow":25,"actHigh":28,"tuition":19095,"population":26947,"majors":["Kinesiology","Agricultural Sciences","Nursing"],"website":"https://uiowa.edu","badge":"publicElite","founded":1847,"ranking":55,"quality":86,"performance":85,"region":"Midwest","crestHue1":153,"crestHue2":179},{"id":"university-of-georgia","name":"University of Georgia","city":"Athens","state":"GA","lat":33.949,"lon":-83.377,"acceptance":49.4,"satLow":1247,"satHigh":1377,"actLow":26,"actHigh":29,"tuition":17968,"population":40761,"majors":["Civil Engineering","Kinesiology","Agricultural Sciences"],"website":"https://www.uga.edu","badge":"publicElite","founded":1785,"ranking":56,"quality":87,"performance":90,"region":"South","crestHue1":125,"crestHue2":151},{"id":"virginia-tech","name":"Virginia Tech","city":"Blacksburg","state":"VA","lat":37.229,"lon":-80.414,"acceptance":48.0,"satLow":1211,"satHigh":1336,"actLow":25,"actHigh":30,"tuition":35711,"population":45719,"majors":["Computer Science","Agricultural Sciences","Nursing"],"website":"https://www.vt.edu","badge":"publicElite","founded":1872,"ranking":57,"quality":84,"performance":89,"region":"South","crestHue1":145,"crestHue2":171},{"id":"north-carolina-state-university","name":"North Carolina State University","city":"Raleigh","state":"NC","lat":35.785,"lon":-78.67,"acceptance":39.3,"satLow":1285,"satHigh":1428,"actLow":24,"actHigh":27,"tuition":18545,"population":30508,"majors":["Agricultural Sciences","Communications","Computer Science"],"website":"https://www.ncsu.edu","badge":"publicElite","founded":1887,"ranking":58,"quality":87,"performance":81,"region":"South","crestHue1":145,"crestHue2":171},{"id":"clemson-university","name":"Clemson University","city":"Clemson","state":"SC","lat":34.678,"lon":-82.837,"acceptance":18.4,"satLow":1273,"satHigh":1394,"actLow":24,"actHigh":29,"tuition":31237,"population":40239,"majors":["Business Administration","Kinesiology","Computer Science"],"website":"https://www.clemson.edu","badge":"publicElite","founded":1889,"ranking":59,"quality":87,"performance":89,"region":"South","crestHue1":141,"crestHue2":167},{"id":"florida-state-university","name":"Florida State University","city":"Tallahassee","state":"FL","lat":30.442,"lon":-84.298,"acceptance":52.6,"satLow":1293,"satHigh":1428,"actLow":26,"actHigh":29,"tuition":26763,"population":35100,"majors":["Communications","Chemistry","Computer Science"],"website":"https://www.fsu.edu","badge":"publicElite","founded":1851,"ranking":60,"quality":87,"performance":82,"region":"South","crestHue1":132,"crestHue2":158},{"id":"louisiana-state-university","name":"Louisiana State University","city":"Baton Rouge","state":"LA","lat":30.412,"lon":-91.179,"acceptance":27.2,"satLow":1268,"satHigh":1414,"actLow":29,"actHigh":34,"tuition":31658,"population":22014,"majors":["Civil Engineering","Computer Science","Communications"],"website":"https://www.lsu.edu","badge":"publicElite","founded":1860,"ranking":61,"quality":82,"performance":84,"region":"South","crestHue1":134,"crestHue2":160},{"id":"university-of-alabama","name":"University of Alabama","city":"Tuscaloosa","state":"AL","lat":33.211,"lon":-87.546,"acceptance":54.5,"satLow":1248,"satHigh":1394,"actLow":25,"actHigh":29,"tuition":18818,"population":23701,"majors":["Agricultural Sciences","Nursing","Communications"],"website":"https://www.ua.edu","badge":"publicElite","founded":1831,"ranking":62,"quality":82,"performance":84,"region":"South","crestHue1":124,"crestHue2":150},{"id":"university-of-tennessee-knoxville","name":"University of Tennessee, Knoxville","city":"Knoxville","state":"TN","lat":35.954,"lon":-83.929,"acceptance":30.5,"satLow":1242,"satHigh":1363,"actLow":29,"actHigh":32,"tuition":28821,"population":41865,"majors":["Business Administration","Nursing","Mechanical Engineering"],"website":"https://www.utk.edu","badge":"publicElite","founded":1794,"ranking":63,"quality":84,"performance":80,"region":"South","crestHue1":124,"crestHue2":150},{"id":"university-of-kentucky","name":"University of Kentucky","city":"Lexington","state":"KY","lat":38.03,"lon":-84.504,"acceptance":41.4,"satLow":1240,"satHigh":1398,"actLow":27,"actHigh":30,"tuition":17690,"population":23029,"majors":["Journalism","Computer Science","Nursing"],"website":"https://www.uky.edu","badge":"publicElite","founded":1865,"ranking":64,"quality":84,"performance":82,"region":"South","crestHue1":146,"crestHue2":172},{"id":"university-of-south-carolina","name":"University of South Carolina","city":"Columbia","state":"SC","lat":34.0,"lon":-81.033,"acceptance":49.7,"satLow":1233,"satHigh":1391,"actLow":27,"actHigh":31,"tuition":27885,"population":44175,"majors":["Mechanical Engineering","Agricultural Sciences","Computer Science"],"website":"https://www.sc.edu","badge":"publicElite","founded":1801,"ranking":65,"quality":87,"performance":88,"region":"South","crestHue1":137,"crestHue2":163},{"id":"university-of-oregon","name":"University of Oregon","city":"Eugene","state":"OR","lat":44.045,"lon":-123.072,"acceptance":45.5,"satLow":1186,"satHigh":1343,"actLow":26,"actHigh":31,"tuition":34860,"population":36809,"majors":["Kinesiology","Mechanical Engineering","Agricultural Sciences"],"website":"https://www.uoregon.edu","badge":"publicElite","founded":1876,"ranking":66,"quality":83,"performance":85,"region":"West","crestHue1":145,"crestHue2":171},{"id":"oregon-state-university","name":"Oregon State University","city":"Corvallis","state":"OR","lat":44.564,"lon":-123.279,"acceptance":34.4,"satLow":1200,"satHigh":1357,"actLow":29,"actHigh":34,"tuition":28282,"population":26079,"majors":["Chemistry","Communications","Mechanical Engineering"],"website":"https://oregonstate.edu","badge":"publicElite","founded":1868,"ranking":67,"quality":88,"performance":81,"region":"West","crestHue1":147,"crestHue2":173},{"id":"washington-state-university","name":"Washington State University","city":"Pullman","state":"WA","lat":46.732,"lon":-117.159,"acceptance":23.1,"satLow":1220,"satHigh":1351,"actLow":28,"actHigh":32,"tuition":27492,"population":20460,"majors":["Civil Engineering","Nursing","Journalism"],"website":"https://wsu.edu","badge":"publicElite","founded":1890,"ranking":68,"quality":85,"performance":78,"region":"West","crestHue1":127,"crestHue2":153},{"id":"university-of-utah","name":"University of Utah","city":"Salt Lake City","state":"UT","lat":40.765,"lon":-111.844,"acceptance":35.1,"satLow":1287,"satHigh":1449,"actLow":27,"actHigh":31,"tuition":20033,"population":34500,"majors":["Nursing","Agricultural Sciences","Journalism"],"website":"https://www.utah.edu","badge":"publicElite","founded":1850,"ranking":69,"quality":82,"performance":88,"region":"West","crestHue1":150,"crestHue2":176},{"id":"university-of-houston","name":"University of Houston","city":"Houston","state":"TX","lat":29.721,"lon":-95.342,"acceptance":39.7,"satLow":1290,"satHigh":1425,"actLow":24,"actHigh":28,"tuition":29001,"population":26462,"majors":["Business Administration","Kinesiology","Computer Science"],"website":"https://www.uh.edu","badge":"publicElite","founded":1927,"ranking":70,"quality":85,"performance":83,"region":"South","crestHue1":157,"crestHue2":183},{"id":"texas-tech-university","name":"Texas Tech University","city":"Lubbock","state":"TX","lat":33.584,"lon":-101.874,"acceptance":44.0,"satLow":1205,"satHigh":1334,"actLow":27,"actHigh":32,"tuition":26225,"population":21184,"majors":["Business Administration","Chemistry","Computer Science"],"website":"https://www.ttu.edu","badge":"publicElite","founded":1923,"ranking":71,"quality":87,"performance":81,"region":"South","crestHue1":123,"crestHue2":149},{"id":"oklahoma-state-university","name":"Oklahoma State University","city":"Stillwater","state":"OK","lat":36.125,"lon":-97.068,"acceptance":49.1,"satLow":1256,"satHigh":1420,"actLow":27,"actHigh":32,"tuition":33738,"population":37384,"majors":["Computer Science","Chemistry","Journalism"],"website":"https://go.okstate.edu","badge":"publicElite","founded":1890,"ranking":72,"quality":80,"performance":82,"region":"South","crestHue1":133,"crestHue2":159},{"id":"university-of-oklahoma","name":"University of Oklahoma","city":"Norman","state":"OK","lat":35.206,"lon":-97.445,"acceptance":40.2,"satLow":1279,"satHigh":1437,"actLow":29,"actHigh":33,"tuition":23839,"population":42015,"majors":["Computer Science","Journalism","Communications"],"website":"https://www.ou.edu","badge":"publicElite","founded":1890,"ranking":73,"quality":85,"performance":84,"region":"South","crestHue1":157,"crestHue2":183},{"id":"mississippi-state-university","name":"Mississippi State University","city":"Starkville","state":"MS","lat":33.455,"lon":-88.79,"acceptance":42.6,"satLow":1199,"satHigh":1341,"actLow":27,"actHigh":31,"tuition":22311,"population":18156,"majors":["Communications","Civil Engineering","Chemistry"],"website":"https://www.msstate.edu","badge":"publicElite","founded":1878,"ranking":74,"quality":85,"performance":79,"region":"South","crestHue1":156,"crestHue2":182},{"id":"university-of-mississippi","name":"University of Mississippi","city":"Oxford","state":"MS","lat":34.365,"lon":-89.538,"acceptance":39.2,"satLow":1258,"satHigh":1386,"actLow":26,"actHigh":31,"tuition":30704,"population":20965,"majors":["Mechanical Engineering","Agricultural Sciences","Journalism"],"website":"https://www.olemiss.edu","badge":"publicElite","founded":1848,"ranking":75,"quality":78,"performance":83,"region":"South","crestHue1":126,"crestHue2":152},{"id":"auburn-university","name":"Auburn University","city":"Auburn","state":"AL","lat":32.602,"lon":-85.489,"acceptance":51.3,"satLow":1267,"satHigh":1395,"actLow":27,"actHigh":30,"tuition":32044,"population":28675,"majors":["Computer Science","Mechanical Engineering","Journalism"],"website":"https://www.auburn.edu","badge":"publicElite","founded":1856,"ranking":76,"quality":78,"performance":79,"region":"South","crestHue1":153,"crestHue2":179},{"id":"university-of-missouri","name":"University of Missouri","city":"Columbia","state":"MO","lat":38.945,"lon":-92.328,"acceptance":23.1,"satLow":1276,"satHigh":1405,"actLow":29,"actHigh":34,"tuition":25346,"population":40162,"majors":["Computer Science","Chemistry","Business Administration"],"website":"https://missouri.edu","badge":"publicElite","founded":1839,"ranking":77,"quality":79,"performance":77,"region":"Midwest","crestHue1":153,"crestHue2":179},{"id":"university-of-arkansas","name":"University of Arkansas","city":"Fayetteville","state":"AR","lat":36.068,"lon":-94.174,"acceptance":22.1,"satLow":1276,"satHigh":1410,"actLow":29,"actHigh":34,"tuition":16148,"population":25902,"majors":["Civil Engineering","Chemistry","Kinesiology"],"website":"https://www.uark.edu","badge":"publicElite","founded":1871,"ranking":78,"quality":78,"performance":80,"region":"South","crestHue1":152,"crestHue2":178},{"id":"west-virginia-university","name":"West Virginia University","city":"Morgantown","state":"WV","lat":39.634,"lon":-79.955,"acceptance":26.4,"satLow":1178,"satHigh":1333,"actLow":26,"actHigh":29,"tuition":46944,"population":32556,"majors":["Mechanical Engineering","Business Administration","Chemistry"],"website":"https://www.wvu.edu","badge":"publicElite","founded":1867,"ranking":79,"quality":79,"performance":84,"region":"South","crestHue1":154,"crestHue2":180},{"id":"university-of-cincinnati","name":"University of Cincinnati","city":"Cincinnati","state":"OH","lat":39.131,"lon":-84.516,"acceptance":20.0,"satLow":1277,"satHigh":1413,"actLow":26,"actHigh":31,"tuition":25449,"population":31649,"majors":["Chemistry","Mechanical Engineering","Civil Engineering"],"website":"https://www.uc.edu","badge":"publicElite","founded":1819,"ranking":80,"quality":78,"performance":75,"region":"Midwest","crestHue1":145,"crestHue2":171},{"id":"university-of-connecticut","name":"University of Connecticut","city":"Storrs","state":"CT","lat":41.807,"lon":-72.254,"acceptance":31.4,"satLow":1274,"satHigh":1411,"actLow":26,"actHigh":31,"tuition":18808,"population":42021,"majors":["Kinesiology","Agricultural Sciences","Chemistry"],"website":"https://uconn.edu","badge":"publicElite","founded":1881,"ranking":81,"quality":79,"performance":76,"region":"Northeast","crestHue1":137,"crestHue2":163},{"id":"university-of-delaware","name":"University of Delaware","city":"Newark","state":"DE","lat":39.679,"lon":-75.75,"acceptance":53.6,"satLow":1247,"satHigh":1417,"actLow":28,"actHigh":31,"tuition":23898,"population":39165,"majors":["Agricultural Sciences","Kinesiology","Computer Science"],"website":"https://www.udel.edu","badge":"publicElite","founded":1743,"ranking":82,"quality":81,"performance":75,"region":"South","crestHue1":138,"crestHue2":164},{"id":"university-of-vermont","name":"University of Vermont","city":"Burlington","state":"VT","lat":44.477,"lon":-73.194,"acceptance":25.2,"satLow":1173,"satHigh":1321,"actLow":29,"actHigh":34,"tuition":27921,"population":27488,"majors":["Communications","Nursing","Journalism"],"website":"https://www.uvm.edu","badge":"publicElite","founded":1791,"ranking":83,"quality":81,"performance":76,"region":"Northeast","crestHue1":133,"crestHue2":159},{"id":"university-of-new-hampshire","name":"University of New Hampshire","city":"Durham","state":"NH","lat":43.136,"lon":-70.926,"acceptance":39.0,"satLow":1177,"satHigh":1301,"actLow":27,"actHigh":30,"tuition":28192,"population":32841,"majors":["Mechanical Engineering","Agricultural Sciences","Nursing"],"website":"https://www.unh.edu","badge":"publicElite","founded":1866,"ranking":84,"quality":79,"performance":73,"region":"Northeast","crestHue1":148,"crestHue2":174},{"id":"stony-brook-university","name":"Stony Brook University","city":"Stony Brook","state":"NY","lat":40.913,"lon":-73.123,"acceptance":33.3,"satLow":1251,"satHigh":1387,"actLow":25,"actHigh":30,"tuition":24433,"population":44028,"majors":["Kinesiology","Chemistry","Agricultural Sciences"],"website":"https://www.stonybrook.edu","badge":"publicElite","founded":1957,"ranking":85,"quality":79,"performance":76,"region":"Northeast","crestHue1":130,"crestHue2":156},{"id":"binghamton-university","name":"Binghamton University","city":"Binghamton","state":"NY","lat":42.089,"lon":-75.968,"acceptance":54.5,"satLow":1251,"satHigh":1378,"actLow":26,"actHigh":31,"tuition":15615,"population":21960,"majors":["Civil Engineering","Kinesiology","Agricultural Sciences"],"website":"https://www.binghamton.edu","badge":"publicElite","founded":1946,"ranking":86,"quality":77,"performance":82,"region":"Northeast","crestHue1":132,"crestHue2":158},{"id":"university-at-buffalo","name":"University at Buffalo","city":"Buffalo","state":"NY","lat":43.001,"lon":-78.789,"acceptance":25.7,"satLow":1170,"satHigh":1314,"actLow":29,"actHigh":33,"tuition":49804,"population":37324,"majors":["Chemistry","Communications","Journalism"],"website":"https://www.buffalo.edu","badge":"publicElite","founded":1846,"ranking":87,"quality":77,"performance":75,"region":"Northeast","crestHue1":137,"crestHue2":163},{"id":"university-at-albany","name":"University at Albany","city":"Albany","state":"NY","lat":42.688,"lon":-73.825,"acceptance":50.5,"satLow":1201,"satHigh":1340,"actLow":29,"actHigh":32,"tuition":42886,"population":24558,"majors":["Chemistry","Communications","Computer Science"],"website":"https://www.albany.edu","badge":"publicElite","founded":1844,"ranking":88,"quality":79,"performance":83,"region":"Northeast","crestHue1":127,"crestHue2":153},{"id":"university-of-maryland-baltimore-county","name":"University of Maryland, Baltimore County","city":"Baltimore","state":"MD","lat":39.255,"lon":-76.712,"acceptance":32.2,"satLow":1189,"satHigh":1318,"actLow":24,"actHigh":28,"tuition":33289,"population":45080,"majors":["Journalism","Computer Science","Communications"],"website":"https://umbc.edu","badge":"publicElite","founded":1966,"ranking":89,"quality":82,"performance":76,"region":"South","crestHue1":128,"crestHue2":154},{"id":"towson-university","name":"Towson University","city":"Towson","state":"MD","lat":39.392,"lon":-76.61,"acceptance":46.0,"satLow":1245,"satHigh":1403,"actLow":25,"actHigh":30,"tuition":50529,"population":37292,"majors":["Mechanical Engineering","Computer Science","Nursing"],"website":"https://www.towson.edu","badge":"publicElite","founded":1866,"ranking":90,"quality":77,"performance":78,"region":"South","crestHue1":138,"crestHue2":164},{"id":"george-mason-university","name":"George Mason University","city":"Fairfax","state":"VA","lat":38.831,"lon":-77.318,"acceptance":48.6,"satLow":1188,"satHigh":1340,"actLow":27,"actHigh":31,"tuition":45013,"population":20173,"majors":["Chemistry","Nursing","Business Administration"],"website":"https://www.gmu.edu","badge":"publicElite","founded":1957,"ranking":91,"quality":74,"performance":84,"region":"South","crestHue1":138,"crestHue2":164},{"id":"james-madison-university","name":"James Madison University","city":"Harrisonburg","state":"VA","lat":38.439,"lon":-78.868,"acceptance":49.2,"satLow":1221,"satHigh":1390,"actLow":24,"actHigh":27,"tuition":30643,"population":39105,"majors":["Chemistry","Civil Engineering","Kinesiology"],"website":"https://www.jmu.edu","badge":"publicElite","founded":1908,"ranking":92,"quality":75,"performance":74,"region":"South","crestHue1":132,"crestHue2":158},{"id":"virginia-commonwealth-university","name":"Virginia Commonwealth University","city":"Richmond","state":"VA","lat":37.549,"lon":-77.451,"acceptance":43.4,"satLow":1298,"satHigh":1465,"actLow":27,"actHigh":30,"tuition":41707,"population":42339,"majors":["Kinesiology","Computer Science","Journalism"],"website":"https://www.vcu.edu","badge":"publicElite","founded":1838,"ranking":93,"quality":81,"performance":81,"region":"South","crestHue1":149,"crestHue2":175},{"id":"old-dominion-university","name":"Old Dominion University","city":"Norfolk","state":"VA","lat":36.886,"lon":-76.305,"acceptance":32.2,"satLow":1260,"satHigh":1388,"actLow":28,"actHigh":33,"tuition":36246,"population":35105,"majors":["Kinesiology","Mechanical Engineering","Nursing"],"website":"https://www.odu.edu","badge":"publicElite","founded":1930,"ranking":94,"quality":75,"performance":73,"region":"South","crestHue1":131,"crestHue2":157},{"id":"college-of-william-and-mary","name":"College of William & Mary","city":"Williamsburg","state":"VA","lat":37.272,"lon":-76.712,"acceptance":13.9,"satLow":1379,"satHigh":1548,"actLow":28,"actHigh":31,"tuition":23300,"population":6300,"majors":["Economics","Biology","Finance"],"website":"https://www.wm.edu","badge":"top","founded":1693,"ranking":95,"quality":77,"performance":76,"region":"South","crestHue1":182,"crestHue2":208},{"id":"university-of-miami","name":"University of Miami","city":"Coral Gables","state":"FL","lat":25.717,"lon":-80.278,"acceptance":9.3,"satLow":1403,"satHigh":1573,"actLow":29,"actHigh":34,"tuition":58306,"population":19511,"majors":["Business Administration","Economics","International Relations"],"website":"https://welcome.miami.edu","badge":"top","founded":1925,"ranking":96,"quality":79,"performance":78,"region":"South","crestHue1":212,"crestHue2":238},{"id":"boston-university","name":"Boston University","city":"Boston","state":"MA","lat":42.35,"lon":-71.106,"acceptance":5.9,"satLow":1387,"satHigh":1546,"actLow":31,"actHigh":34,"tuition":56845,"population":10866,"majors":["Psychology","Finance","Political Science"],"website":"https://www.bu.edu","badge":"top","founded":1839,"ranking":97,"quality":79,"performance":78,"region":"Northeast","crestHue1":210,"crestHue2":236},{"id":"boston-college","name":"Boston College","city":"Chestnut Hill","state":"MA","lat":42.335,"lon":-71.168,"acceptance":13.8,"satLow":1398,"satHigh":1548,"actLow":32,"actHigh":36,"tuition":59125,"population":17302,"majors":["Neuroscience","Computer Science","Economics"],"website":"https://www.bc.edu","badge":"top","founded":1863,"ranking":98,"quality":76,"performance":74,"region":"Northeast","crestHue1":198,"crestHue2":224},{"id":"northeastern-university","name":"Northeastern University","city":"Boston","state":"MA","lat":42.34,"lon":-71.089,"acceptance":13.0,"satLow":1365,"satHigh":1513,"actLow":28,"actHigh":31,"tuition":59927,"population":6715,"majors":["Computer Science","Psychology","International Relations"],"website":"https://www.northeastern.edu","badge":"top","founded":1898,"ranking":99,"quality":79,"performance":81,"region":"Northeast","crestHue1":216,"crestHue2":242},{"id":"case-western-reserve-university","name":"Case Western Reserve University","city":"Cleveland","state":"OH","lat":41.504,"lon":-81.608,"acceptance":9.5,"satLow":1398,"satHigh":1547,"actLow":31,"actHigh":34,"tuition":62336,"population":16293,"majors":["International Relations","Political Science","Business Administration"],"website":"https://case.edu","badge":"top","founded":1826,"ranking":100,"quality":78,"performance":74,"region":"Midwest","crestHue1":216,"crestHue2":242},{"id":"lehigh-university","name":"Lehigh University","city":"Bethlehem","state":"PA","lat":40.606,"lon":-75.377,"acceptance":49.3,"satLow":1031,"satHigh":1157,"actLow":23,"actHigh":26,"tuition":41345,"population":3828,"majors":["Biology","Exercise Science","Education"],"website":"https://www1.lehigh.edu","badge":"none","founded":1865,"ranking":101,"quality":78,"performance":71,"region":"Northeast","crestHue1":14,"crestHue2":40},{"id":"villanova-university","name":"Villanova University","city":"Villanova","state":"PA","lat":40.037,"lon":-75.343,"acceptance":78.7,"satLow":1035,"satHigh":1168,"actLow":22,"actHigh":26,"tuition":29639,"population":10208,"majors":["Exercise Science","Communications","Nursing"],"website":"https://www1.villanova.edu","badge":"none","founded":1842,"ranking":102,"quality":74,"performance":77,"region":"Northeast","crestHue1":30,"crestHue2":56},{"id":"fordham-university","name":"Fordham University","city":"New York","state":"NY","lat":40.862,"lon":-73.888,"acceptance":41.1,"satLow":1165,"satHigh":1307,"actLow":26,"actHigh":31,"tuition":49772,"population":10892,"majors":["Nursing","Exercise Science","Marketing"],"website":"https://www.fordham.edu","badge":"none","founded":1841,"ranking":103,"quality":74,"performance":76,"region":"Northeast","crestHue1":27,"crestHue2":53},{"id":"university-of-rochester","name":"University of Rochester","city":"Rochester","state":"NY","lat":43.13,"lon":-77.628,"acceptance":9.0,"satLow":1368,"satHigh":1525,"actLow":30,"actHigh":34,"tuition":59284,"population":8915,"majors":["Mechanical Engineering","Biology","Business Administration"],"website":"https://www.rochester.edu","badge":"top","founded":1850,"ranking":104,"quality":79,"performance":79,"region":"Northeast","crestHue1":182,"crestHue2":208},{"id":"rensselaer-polytechnic-institute","name":"Rensselaer Polytechnic Institute","city":"Troy","state":"NY","lat":42.73,"lon":-73.681,"acceptance":85.2,"satLow":1127,"satHigh":1242,"actLow":25,"actHigh":28,"tuition":48196,"population":7500,"majors":["Biology","Exercise Science","Marketing"],"website":"https://www.rpi.edu","badge":"none","founded":1824,"ranking":105,"quality":79,"performance":79,"region":"Northeast","crestHue1":42,"crestHue2":68},{"id":"tulane-university","name":"Tulane University","city":"New Orleans","state":"LA","lat":29.94,"lon":-90.121,"acceptance":15.4,"satLow":1413,"satHigh":1570,"actLow":30,"actHigh":34,"tuition":64031,"population":8100,"majors":["Economics","Computer Science","Psychology"],"website":"https://tulane.edu","badge":"top","founded":1834,"ranking":106,"quality":75,"performance":80,"region":"South","crestHue1":190,"crestHue2":216},{"id":"southern-methodist-university","name":"Southern Methodist University","city":"Dallas","state":"TX","lat":32.842,"lon":-96.784,"acceptance":76.6,"satLow":1048,"satHigh":1170,"actLow":24,"actHigh":28,"tuition":48470,"population":7809,"majors":["Hospitality Management","Communications","Nursing"],"website":"https://www.smu.edu","badge":"none","founded":1911,"ranking":107,"quality":74,"performance":77,"region":"South","crestHue1":20,"crestHue2":46},{"id":"baylor-university","name":"Baylor University","city":"Waco","state":"TX","lat":31.548,"lon":-97.115,"acceptance":65.3,"satLow":1117,"satHigh":1238,"actLow":24,"actHigh":29,"tuition":32549,"population":7417,"majors":["Exercise Science","Hospitality Management","Nursing"],"website":"https://www.baylor.edu","badge":"none","founded":1845,"ranking":108,"quality":74,"performance":73,"region":"South","crestHue1":23,"crestHue2":49},{"id":"texas-christian-university","name":"Texas Christian University","city":"Fort Worth","state":"TX","lat":32.709,"lon":-97.362,"acceptance":70.5,"satLow":1059,"satHigh":1180,"actLow":23,"actHigh":27,"tuition":32025,"population":16369,"majors":["Criminal Justice","Business Administration","Communications"],"website":"https://www.tcu.edu","badge":"none","founded":1873,"ranking":109,"quality":77,"performance":76,"region":"South","crestHue1":25,"crestHue2":51},{"id":"marquette-university","name":"Marquette University","city":"Milwaukee","state":"WI","lat":43.038,"lon":-87.929,"acceptance":73.5,"satLow":1082,"satHigh":1231,"actLow":26,"actHigh":31,"tuition":42684,"population":10966,"majors":["Accounting","Hospitality Management","Communications"],"website":"https://www.marquette.edu","badge":"none","founded":1881,"ranking":110,"quality":72,"performance":69,"region":"Midwest","crestHue1":33,"crestHue2":59},{"id":"depaul-university","name":"DePaul University","city":"Chicago","state":"IL","lat":41.925,"lon":-87.657,"acceptance":70.3,"satLow":1050,"satHigh":1173,"actLow":22,"actHigh":25,"tuition":50782,"population":14858,"majors":["Marketing","Business Administration","Criminal Justice"],"website":"https://www.depaul.edu","badge":"none","founded":1898,"ranking":111,"quality":73,"performance":71,"region":"Midwest","crestHue1":26,"crestHue2":52},{"id":"loyola-university-chicago","name":"Loyola University Chicago","city":"Chicago","state":"IL","lat":42.001,"lon":-87.661,"acceptance":42.9,"satLow":1103,"satHigh":1257,"actLow":20,"actHigh":23,"tuition":47561,"population":19556,"majors":["Nursing","Hospitality Management","Education"],"website":"https://www.luc.edu","badge":"none","founded":1870,"ranking":112,"quality":73,"performance":78,"region":"Midwest","crestHue1":10,"crestHue2":36},{"id":"illinois-institute-of-technology","name":"Illinois Institute of Technology","city":"Chicago","state":"IL","lat":41.835,"lon":-87.627,"acceptance":74.4,"satLow":1042,"satHigh":1165,"actLow":21,"actHigh":25,"tuition":35204,"population":16638,"majors":["Accounting","Communications","Biology"],"website":"https://www.iit.edu","badge":"none","founded":1890,"ranking":113,"quality":71,"performance":77,"region":"Midwest","crestHue1":17,"crestHue2":43},{"id":"michigan-technological-university","name":"Michigan Technological University","city":"Houghton","state":"MI","lat":47.119,"lon":-88.545,"acceptance":75.5,"satLow":1150,"satHigh":1293,"actLow":21,"actHigh":25,"tuition":43109,"population":9659,"majors":["Criminal Justice","Communications","Nursing"],"website":"https://www.mtu.edu","badge":"none","founded":1885,"ranking":114,"quality":73,"performance":68,"region":"Midwest","crestHue1":23,"crestHue2":49},{"id":"worcester-polytechnic-institute","name":"Worcester Polytechnic Institute","city":"Worcester","state":"MA","lat":42.274,"lon":-71.806,"acceptance":69.5,"satLow":1137,"satHigh":1286,"actLow":23,"actHigh":27,"tuition":44204,"population":9227,"majors":["Marketing","Hospitality Management","Biology"],"website":"https://www.wpi.edu","badge":"none","founded":1865,"ranking":115,"quality":69,"performance":71,"region":"Northeast","crestHue1":17,"crestHue2":43},{"id":"stevens-institute-of-technology","name":"Stevens Institute of Technology","city":"Hoboken","state":"NJ","lat":40.745,"lon":-74.024,"acceptance":41.7,"satLow":1099,"satHigh":1214,"actLow":23,"actHigh":27,"tuition":51357,"population":20958,"majors":["Accounting","Education","Communications"],"website":"https://www.stevens.edu","badge":"none","founded":1870,"ranking":116,"quality":72,"performance":76,"region":"Northeast","crestHue1":42,"crestHue2":68},{"id":"drexel-university","name":"Drexel University","city":"Philadelphia","state":"PA","lat":39.957,"lon":-75.189,"acceptance":59.9,"satLow":1107,"satHigh":1231,"actLow":25,"actHigh":29,"tuition":30960,"population":4968,"majors":["Marketing","Education","Accounting"],"website":"https://drexel.edu","badge":"none","founded":1891,"ranking":117,"quality":68,"performance":78,"region":"Northeast","crestHue1":29,"crestHue2":55},{"id":"temple-university","name":"Temple University","city":"Philadelphia","state":"PA","lat":39.981,"lon":-75.156,"acceptance":48.7,"satLow":1059,"satHigh":1202,"actLow":22,"actHigh":26,"tuition":44823,"population":6508,"majors":["Education","Business Administration","Marketing"],"website":"https://www.temple.edu","badge":"none","founded":1884,"ranking":118,"quality":75,"performance":67,"region":"Northeast","crestHue1":5,"crestHue2":31},{"id":"syracuse-university","name":"Syracuse University","city":"Syracuse","state":"NY","lat":43.038,"lon":-76.135,"acceptance":80.7,"satLow":1088,"satHigh":1203,"actLow":26,"actHigh":30,"tuition":43634,"population":21282,"majors":["Accounting","Marketing","Business Administration"],"website":"https://www.syracuse.edu","badge":"none","founded":1870,"ranking":119,"quality":75,"performance":72,"region":"Northeast","crestHue1":39,"crestHue2":65},{"id":"university-of-denver","name":"University of Denver","city":"Denver","state":"CO","lat":39.677,"lon":-104.962,"acceptance":66.8,"satLow":1178,"satHigh":1317,"actLow":21,"actHigh":26,"tuition":52996,"population":11029,"majors":["Marketing","Nursing","Hospitality Management"],"website":"https://www.du.edu","badge":"none","founded":1864,"ranking":120,"quality":69,"performance":68,"region":"West","crestHue1":41,"crestHue2":67},{"id":"xavier-university","name":"Xavier University","city":"Cincinnati","state":"OH","lat":39.148,"lon":-84.48,"acceptance":60.4,"satLow":1154,"satHigh":1273,"actLow":22,"actHigh":27,"tuition":35090,"population":2791,"majors":["Criminal Justice","Marketing","Communications"],"website":"https://www.xavier.edu","badge":"none","founded":1831,"ranking":121,"quality":68,"performance":74,"region":"Midwest","crestHue1":14,"crestHue2":40},{"id":"university-of-dayton","name":"University of Dayton","city":"Dayton","state":"OH","lat":39.74,"lon":-84.179,"acceptance":59.1,"satLow":1101,"satHigh":1216,"actLow":22,"actHigh":25,"tuition":52185,"population":2499,"majors":["Business Administration","Education","Criminal Justice"],"website":"https://udayton.edu","badge":"none","founded":1850,"ranking":122,"quality":72,"performance":75,"region":"Midwest","crestHue1":27,"crestHue2":53},{"id":"miami-university","name":"Miami University","city":"Oxford","state":"OH","lat":39.508,"lon":-84.732,"acceptance":50.5,"satLow":1276,"satHigh":1401,"actLow":28,"actHigh":33,"tuition":20915,"population":39605,"majors":["Journalism","Computer Science","Business Administration"],"website":"https://miamioh.edu","badge":"publicElite","founded":1809,"ranking":123,"quality":71,"performance":69,"region":"Midwest","crestHue1":149,"crestHue2":175},{"id":"bowling-green-state-university","name":"Bowling Green State University","city":"Bowling Green","state":"OH","lat":41.377,"lon":-83.658,"acceptance":66.1,"satLow":1136,"satHigh":1271,"actLow":23,"actHigh":27,"tuition":11887,"population":20648,"majors":["Business Administration","Biology","Hospitality Management"],"website":"https://www.bgsu.edu","badge":"none","founded":1910,"ranking":124,"quality":73,"performance":71,"region":"Midwest","crestHue1":18,"crestHue2":44},{"id":"kent-state-university","name":"Kent State University","city":"Kent","state":"OH","lat":41.148,"lon":-81.342,"acceptance":61.7,"satLow":1096,"satHigh":1239,"actLow":20,"actHigh":23,"tuition":13792,"population":9087,"majors":["Accounting","Hospitality Management","Communications"],"website":"https://www.kent.edu","badge":"none","founded":1910,"ranking":125,"quality":69,"performance":71,"region":"Midwest","crestHue1":39,"crestHue2":65},{"id":"university-of-akron","name":"University of Akron","city":"Akron","state":"OH","lat":41.075,"lon":-81.51,"acceptance":62.7,"satLow":1148,"satHigh":1281,"actLow":24,"actHigh":29,"tuition":15938,"population":6224,"majors":["Marketing","Accounting","Hospitality Management"],"website":"https://www.uakron.edu","badge":"none","founded":1870,"ranking":126,"quality":73,"performance":70,"region":"Midwest","crestHue1":39,"crestHue2":65},{"id":"university-of-toledo","name":"University of Toledo","city":"Toledo","state":"OH","lat":41.659,"lon":-83.614,"acceptance":67.0,"satLow":1052,"satHigh":1178,"actLow":21,"actHigh":26,"tuition":14815,"population":17737,"majors":["Marketing","Hospitality Management","Communications"],"website":"https://www.utoledo.edu","badge":"none","founded":1872,"ranking":127,"quality":74,"performance":66,"region":"Midwest","crestHue1":6,"crestHue2":32},{"id":"wright-state-university","name":"Wright State University","city":"Dayton","state":"OH","lat":39.782,"lon":-84.062,"acceptance":82.8,"satLow":1119,"satHigh":1257,"actLow":25,"actHigh":30,"tuition":12658,"population":4045,"majors":["Communications","Marketing","Education"],"website":"https://www.wright.edu","badge":"none","founded":1967,"ranking":128,"quality":67,"performance":73,"region":"Midwest","crestHue1":15,"crestHue2":41},{"id":"ball-state-university","name":"Ball State University","city":"Muncie","state":"IN","lat":40.198,"lon":-85.408,"acceptance":54.5,"satLow":1037,"satHigh":1170,"actLow":23,"actHigh":28,"tuition":14181,"population":14450,"majors":["Exercise Science","Education","Criminal Justice"],"website":"https://www.bsu.edu","badge":"none","founded":1918,"ranking":129,"quality":69,"performance":73,"region":"Midwest","crestHue1":23,"crestHue2":49},{"id":"western-michigan-university","name":"Western Michigan University","city":"Kalamazoo","state":"MI","lat":42.283,"lon":-85.614,"acceptance":80.4,"satLow":1034,"satHigh":1188,"actLow":24,"actHigh":27,"tuition":32205,"population":10421,"majors":["Communications","Biology","Marketing"],"website":"https://wmich.edu","badge":"none","founded":1903,"ranking":130,"quality":72,"performance":64,"region":"Midwest","crestHue1":39,"crestHue2":65},{"id":"central-michigan-university","name":"Central Michigan University","city":"Mount Pleasant","state":"MI","lat":43.585,"lon":-84.774,"acceptance":85.3,"satLow":1033,"satHigh":1148,"actLow":20,"actHigh":24,"tuition":29079,"population":17227,"majors":["Communications","Biology","Nursing"],"website":"https://www.cmich.edu","badge":"none","founded":1892,"ranking":131,"quality":71,"performance":69,"region":"Midwest","crestHue1":28,"crestHue2":54},{"id":"eastern-michigan-university","name":"Eastern Michigan University","city":"Ypsilanti","state":"MI","lat":42.25,"lon":-83.625,"acceptance":47.5,"satLow":1042,"satHigh":1172,"actLow":23,"actHigh":27,"tuition":42286,"population":16728,"majors":["Marketing","Hospitality Management","Biology"],"website":"https://www.emich.edu","badge":"none","founded":1849,"ranking":132,"quality":67,"performance":69,"region":"Midwest","crestHue1":8,"crestHue2":34},{"id":"wayne-state-university","name":"Wayne State University","city":"Detroit","state":"MI","lat":42.356,"lon":-83.067,"acceptance":68.9,"satLow":1025,"satHigh":1139,"actLow":21,"actHigh":24,"tuition":9822,"population":4861,"majors":["Nursing","Exercise Science","Marketing"],"website":"https://wayne.edu","badge":"none","founded":1868,"ranking":133,"quality":66,"performance":70,"region":"Midwest","crestHue1":12,"crestHue2":38},{"id":"oakland-university","name":"Oakland University","city":"Rochester","state":"MI","lat":42.674,"lon":-83.214,"acceptance":82.9,"satLow":1148,"satHigh":1298,"actLow":22,"actHigh":25,"tuition":35249,"population":19057,"majors":["Biology","Exercise Science","Education"],"website":"https://oakland.edu","badge":"none","founded":1957,"ranking":134,"quality":69,"performance":73,"region":"Midwest","crestHue1":10,"crestHue2":36},{"id":"grand-valley-state-university","name":"Grand Valley State University","city":"Allendale","state":"MI","lat":42.964,"lon":-85.889,"acceptance":45.5,"satLow":1134,"satHigh":1277,"actLow":23,"actHigh":28,"tuition":9577,"population":14444,"majors":["Accounting","Nursing","Exercise Science"],"website":"https://www.gvsu.edu","badge":"none","founded":1960,"ranking":135,"quality":69,"performance":63,"region":"Midwest","crestHue1":29,"crestHue2":55},{"id":"clark-university","name":"Clark University","city":"Worcester","state":"MA","lat":42.251,"lon":-71.826,"acceptance":82.2,"satLow":1071,"satHigh":1200,"actLow":20,"actHigh":25,"tuition":51650,"population":15135,"majors":["Business Administration","Education","Communications"],"website":"https://www.clarku.edu","badge":"none","founded":1887,"ranking":136,"quality":71,"performance":65,"region":"Northeast","crestHue1":41,"crestHue2":67},{"id":"colorado-school-of-mines","name":"Colorado School of Mines","city":"Golden","state":"CO","lat":39.752,"lon":-105.221,"acceptance":65.3,"satLow":1110,"satHigh":1244,"actLow":24,"actHigh":27,"tuition":39394,"population":21271,"majors":["Exercise Science","Business Administration","Biology"],"website":"https://www.mines.edu","badge":"none","founded":1874,"ranking":137,"quality":68,"performance":65,"region":"West","crestHue1":38,"crestHue2":64},{"id":"united-states-military-academy-west-point","name":"United States Military Academy (West Point)","city":"West Point","state":"NY","lat":41.389,"lon":-73.959,"acceptance":67.9,"satLow":1104,"satHigh":1261,"actLow":21,"actHigh":26,"tuition":0,"population":4505,"majors":["Education","Accounting","Communications"],"website":"https://www.westpoint.edu","badge":"none","founded":1802,"ranking":138,"quality":64,"performance":72,"region":"Northeast","crestHue1":11,"crestHue2":37},{"id":"united-states-naval-academy","name":"United States Naval Academy","city":"Annapolis","state":"MD","lat":38.983,"lon":-76.484,"acceptance":73.9,"satLow":1114,"satHigh":1251,"actLow":21,"actHigh":26,"tuition":0,"population":4061,"majors":["Accounting","Biology","Marketing"],"website":"https://www.usna.edu","badge":"none","founded":1845,"ranking":139,"quality":65,"performance":73,"region":"South","crestHue1":9,"crestHue2":35},{"id":"united-states-air-force-academy","name":"United States Air Force Academy","city":"Colorado Springs","state":"CO","lat":38.997,"lon":-104.862,"acceptance":81.0,"satLow":1115,"satHigh":1238,"actLow":26,"actHigh":31,"tuition":0,"population":3867,"majors":["Exercise Science","Communications","Nursing"],"website":"https://www.usafa.edu","badge":"none","founded":1954,"ranking":140,"quality":68,"performance":64,"region":"West","crestHue1":5,"crestHue2":31},{"id":"united-states-coast-guard-academy","name":"United States Coast Guard Academy","city":"New London","state":"CT","lat":41.377,"lon":-72.09,"acceptance":48.3,"satLow":1046,"satHigh":1199,"actLow":26,"actHigh":31,"tuition":0,"population":4503,"majors":["Criminal Justice","Business Administration","Accounting"],"website":"https://www.uscga.edu","badge":"none","founded":1876,"ranking":141,"quality":65,"performance":72,"region":"Northeast","crestHue1":26,"crestHue2":52},{"id":"brigham-young-university","name":"Brigham Young University","city":"Provo","state":"UT","lat":40.253,"lon":-111.649,"acceptance":48.9,"satLow":1143,"satHigh":1261,"actLow":23,"actHigh":27,"tuition":30659,"population":2248,"majors":["Business Administration","Nursing","Marketing"],"website":"https://www.byu.edu","badge":"none","founded":1875,"ranking":142,"quality":67,"performance":73,"region":"West","crestHue1":22,"crestHue2":48},{"id":"loyola-marymount-university","name":"Loyola Marymount University","city":"Los Angeles","state":"CA","lat":33.97,"lon":-118.417,"acceptance":49.1,"satLow":1123,"satHigh":1273,"actLow":23,"actHigh":27,"tuition":43244,"population":15271,"majors":["Accounting","Marketing","Business Administration"],"website":"https://lmu.edu","badge":"none","founded":1911,"ranking":143,"quality":66,"performance":65,"region":"West","crestHue1":15,"crestHue2":41},{"id":"santa-clara-university","name":"Santa Clara University","city":"Santa Clara","state":"CA","lat":37.349,"lon":-121.938,"acceptance":59.4,"satLow":1118,"satHigh":1236,"actLow":20,"actHigh":24,"tuition":34891,"population":10966,"majors":["Communications","Marketing","Biology"],"website":"https://www.scu.edu","badge":"none","founded":1851,"ranking":144,"quality":69,"performance":73,"region":"West","crestHue1":10,"crestHue2":36},{"id":"university-of-san-diego","name":"University of San Diego","city":"San Diego","state":"CA","lat":32.771,"lon":-117.19,"acceptance":74.5,"satLow":1071,"satHigh":1208,"actLow":22,"actHigh":26,"tuition":49177,"population":3718,"majors":["Biology","Hospitality Management","Communications"],"website":"https://www.sandiego.edu","badge":"none","founded":1949,"ranking":145,"quality":67,"performance":62,"region":"West","crestHue1":37,"crestHue2":63},{"id":"pepperdine-university","name":"Pepperdine University","city":"Malibu","state":"CA","lat":34.038,"lon":-118.708,"acceptance":43.4,"satLow":1141,"satHigh":1280,"actLow":23,"actHigh":27,"tuition":41837,"population":6227,"majors":["Accounting","Criminal Justice","Exercise Science"],"website":"https://www.pepperdine.edu","badge":"none","founded":1937,"ranking":146,"quality":68,"performance":67,"region":"West","crestHue1":26,"crestHue2":52},{"id":"university-of-the-pacific","name":"University of the Pacific","city":"Stockton","state":"CA","lat":37.98,"lon":-121.314,"acceptance":66.3,"satLow":1070,"satHigh":1186,"actLow":22,"actHigh":25,"tuition":30792,"population":9333,"majors":["Communications","Marketing","Biology"],"website":"https://www.pacific.edu","badge":"none","founded":1851,"ranking":147,"quality":63,"performance":65,"region":"West","crestHue1":19,"crestHue2":45},{"id":"chapman-university","name":"Chapman University","city":"Orange","state":"CA","lat":33.793,"lon":-117.852,"acceptance":68.0,"satLow":1081,"satHigh":1204,"actLow":25,"actHigh":29,"tuition":38817,"population":6174,"majors":["Exercise Science","Business Administration","Criminal Justice"],"website":"https://www.chapman.edu","badge":"none","founded":1861,"ranking":148,"quality":66,"performance":69,"region":"West","crestHue1":32,"crestHue2":58},{"id":"university-of-redlands","name":"University of Redlands","city":"Redlands","state":"CA","lat":34.062,"lon":-117.183,"acceptance":60.4,"satLow":1025,"satHigh":1139,"actLow":26,"actHigh":31,"tuition":44401,"population":19823,"majors":["Education","Communications","Business Administration"],"website":"https://www.redlands.edu","badge":"none","founded":1907,"ranking":149,"quality":66,"performance":66,"region":"West","crestHue1":28,"crestHue2":54},{"id":"university-of-portland","name":"University of Portland","city":"Portland","state":"OR","lat":45.573,"lon":-122.729,"acceptance":71.2,"satLow":1107,"satHigh":1242,"actLow":22,"actHigh":25,"tuition":47175,"population":15595,"majors":["Hospitality Management","Accounting","Criminal Justice"],"website":"https://www.up.edu","badge":"none","founded":1901,"ranking":150,"quality":68,"performance":63,"region":"West","crestHue1":36,"crestHue2":62},{"id":"gonzaga-university","name":"Gonzaga University","city":"Spokane","state":"WA","lat":47.667,"lon":-117.402,"acceptance":76.6,"satLow":1057,"satHigh":1214,"actLow":21,"actHigh":25,"tuition":44822,"population":21989,"majors":["Biology","Accounting","Marketing"],"website":"https://www.gonzaga.edu","badge":"none","founded":1887,"ranking":151,"quality":61,"performance":65,"region":"West","crestHue1":43,"crestHue2":69},{"id":"seattle-university","name":"Seattle University","city":"Seattle","state":"WA","lat":47.609,"lon":-122.313,"acceptance":69.4,"satLow":1104,"satHigh":1232,"actLow":22,"actHigh":25,"tuition":50794,"population":13361,"majors":["Hospitality Management","Education","Biology"],"website":"https://www.seattleu.edu","badge":"none","founded":1891,"ranking":152,"quality":62,"performance":71,"region":"West","crestHue1":30,"crestHue2":56},{"id":"university-of-puget-sound","name":"University of Puget Sound","city":"Tacoma","state":"WA","lat":47.255,"lon":-122.47,"acceptance":33.4,"satLow":1334,"satHigh":1445,"actLow":31,"actHigh":35,"tuition":66643,"population":3119,"majors":["Philosophy","Studio Art","Environmental Studies"],"website":"https://www.pugetsound.edu","badge":"liberalArts","founded":1888,"ranking":153,"quality":62,"performance":64,"region":"West","crestHue1":282,"crestHue2":308},{"id":"willamette-university","name":"Willamette University","city":"Salem","state":"OR","lat":44.938,"lon":-123.033,"acceptance":35.2,"satLow":1398,"satHigh":1528,"actLow":28,"actHigh":31,"tuition":63747,"population":2319,"majors":["Environmental Studies","Sociology","English"],"website":"https://willamette.edu","badge":"liberalArts","founded":1842,"ranking":154,"quality":66,"performance":69,"region":"West","crestHue1":260,"crestHue2":286},{"id":"lewis-and-clark-college","name":"Lewis & Clark College","city":"Portland","state":"OR","lat":45.449,"lon":-122.671,"acceptance":14.2,"satLow":1355,"satHigh":1477,"actLow":29,"actHigh":33,"tuition":57154,"population":2705,"majors":["Environmental Studies","Studio Art","Sociology"],"website":"https://www.lclark.edu","badge":"liberalArts","founded":1867,"ranking":155,"quality":62,"performance":68,"region":"West","crestHue1":282,"crestHue2":308},{"id":"university-of-san-francisco","name":"University of San Francisco","city":"San Francisco","state":"CA","lat":37.777,"lon":-122.45,"acceptance":38.7,"satLow":1178,"satHigh":1329,"actLow":23,"actHigh":26,"tuition":33430,"population":7176,"majors":["Marketing","Communications","Education"],"website":"https://www.usfca.edu","badge":"none","founded":1855,"ranking":156,"quality":61,"performance":65,"region":"West","crestHue1":31,"crestHue2":57},{"id":"saint-louis-university","name":"Saint Louis University","city":"St. Louis","state":"MO","lat":38.637,"lon":-90.232,"acceptance":72.6,"satLow":1152,"satHigh":1282,"actLow":21,"actHigh":24,"tuition":38169,"population":14611,"majors":["Biology","Marketing","Exercise Science"],"website":"https://www.slu.edu","badge":"none","founded":1818,"ranking":157,"quality":62,"performance":67,"region":"Midwest","crestHue1":44,"crestHue2":70},{"id":"creighton-university","name":"Creighton University","city":"Omaha","state":"NE","lat":41.266,"lon":-95.952,"acceptance":40.2,"satLow":1148,"satHigh":1303,"actLow":25,"actHigh":30,"tuition":41047,"population":1903,"majors":["Business Administration","Criminal Justice","Hospitality Management"],"website":"https://www.creighton.edu","badge":"none","founded":1878,"ranking":158,"quality":65,"performance":67,"region":"Midwest","crestHue1":41,"crestHue2":67},{"id":"university-of-tulsa","name":"University of Tulsa","city":"Tulsa","state":"OK","lat":36.151,"lon":-95.945,"acceptance":42.0,"satLow":1048,"satHigh":1169,"actLow":22,"actHigh":26,"tuition":44689,"population":17604,"majors":["Marketing","Criminal Justice","Hospitality Management"],"website":"https://utulsa.edu","badge":"none","founded":1894,"ranking":159,"quality":60,"performance":69,"region":"South","crestHue1":30,"crestHue2":56},{"id":"rollins-college","name":"Rollins College","city":"Winter Park","state":"FL","lat":28.598,"lon":-81.351,"acceptance":14.7,"satLow":1368,"satHigh":1494,"actLow":30,"actHigh":33,"tuition":65199,"population":1855,"majors":["History","English","Music"],"website":"https://www.rollins.edu","badge":"liberalArts","founded":1885,"ranking":160,"quality":64,"performance":68,"region":"South","crestHue1":264,"crestHue2":290},{"id":"stetson-university","name":"Stetson University","city":"DeLand","state":"FL","lat":29.03,"lon":-81.301,"acceptance":50.6,"satLow":1131,"satHigh":1244,"actLow":24,"actHigh":29,"tuition":50936,"population":9343,"majors":["Accounting","Communications","Education"],"website":"https://www.stetson.edu","badge":"none","founded":1883,"ranking":161,"quality":61,"performance":62,"region":"South","crestHue1":24,"crestHue2":50},{"id":"university-of-richmond","name":"University of Richmond","city":"Richmond","state":"VA","lat":37.575,"lon":-77.534,"acceptance":20.0,"satLow":1280,"satHigh":1385,"actLow":27,"actHigh":30,"tuition":65468,"population":3115,"majors":["Political Science","Environmental Studies","English"],"website":"https://www.richmond.edu","badge":"liberalArts","founded":1830,"ranking":162,"quality":65,"performance":59,"region":"South","crestHue1":279,"crestHue2":305},{"id":"university-of-tampa","name":"University of Tampa","city":"Tampa","state":"FL","lat":27.947,"lon":-82.464,"acceptance":52.1,"satLow":1162,"satHigh":1322,"actLow":20,"actHigh":24,"tuition":30628,"population":4453,"majors":["Accounting","Exercise Science","Education"],"website":"https://www.ut.edu","badge":"none","founded":1931,"ranking":163,"quality":60,"performance":63,"region":"South","crestHue1":26,"crestHue2":52},{"id":"elon-university","name":"Elon University","city":"Elon","state":"NC","lat":36.104,"lon":-79.505,"acceptance":51.9,"satLow":1044,"satHigh":1189,"actLow":22,"actHigh":27,"tuition":29827,"population":16881,"majors":["Accounting","Marketing","Nursing"],"website":"https://www.elon.edu","badge":"none","founded":1889,"ranking":164,"quality":59,"performance":58,"region":"South","crestHue1":32,"crestHue2":58},{"id":"high-point-university","name":"High Point University","city":"High Point","state":"NC","lat":35.966,"lon":-79.996,"acceptance":50.2,"satLow":1058,"satHigh":1197,"actLow":20,"actHigh":25,"tuition":43673,"population":4685,"majors":["Hospitality Management","Exercise Science","Marketing"],"website":"https://www.highpoint.edu","badge":"none","founded":1924,"ranking":165,"quality":58,"performance":66,"region":"South","crestHue1":22,"crestHue2":48},{"id":"furman-university","name":"Furman University","city":"Greenville","state":"SC","lat":34.926,"lon":-82.443,"acceptance":33.8,"satLow":1391,"satHigh":1514,"actLow":29,"actHigh":32,"tuition":66422,"population":2074,"majors":["Studio Art","History","Environmental Studies"],"website":"https://www.furman.edu","badge":"liberalArts","founded":1826,"ranking":166,"quality":58,"performance":60,"region":"South","crestHue1":292,"crestHue2":318},{"id":"sewanee-the-university-of-the-south","name":"Sewanee: The University of the South","city":"Sewanee","state":"TN","lat":35.204,"lon":-85.921,"acceptance":17.3,"satLow":1388,"satHigh":1530,"actLow":32,"actHigh":36,"tuition":58934,"population":1343,"majors":["Environmental Studies","Studio Art","Biology"],"website":"https://new.sewanee.edu","badge":"liberalArts","founded":1857,"ranking":167,"quality":61,"performance":67,"region":"South","crestHue1":276,"crestHue2":302},{"id":"berry-college","name":"Berry College","city":"Mount Berry","state":"GA","lat":34.29,"lon":-85.17,"acceptance":21.4,"satLow":1335,"satHigh":1437,"actLow":31,"actHigh":34,"tuition":61502,"population":1234,"majors":["Sociology","Economics","English"],"website":"https://www.berry.edu","badge":"liberalArts","founded":1902,"ranking":168,"quality":64,"performance":68,"region":"South","crestHue1":273,"crestHue2":299},{"id":"agnes-scott-college","name":"Agnes Scott College","city":"Decatur","state":"GA","lat":33.774,"lon":-84.296,"acceptance":20.7,"satLow":1255,"satHigh":1401,"actLow":28,"actHigh":32,"tuition":56290,"population":1847,"majors":["History","Economics","Biology"],"website":"https://www.agnesscott.edu","badge":"liberalArts","founded":1889,"ranking":169,"quality":62,"performance":59,"region":"South","crestHue1":282,"crestHue2":308},{"id":"spelman-college","name":"Spelman College","city":"Atlanta","state":"GA","lat":33.745,"lon":-84.412,"acceptance":35.6,"satLow":1349,"satHigh":1475,"actLow":31,"actHigh":35,"tuition":65128,"population":901,"majors":["Sociology","Philosophy","Political Science"],"website":"https://www.spelman.edu","badge":"liberalArts","founded":1881,"ranking":170,"quality":61,"performance":57,"region":"South","crestHue1":260,"crestHue2":286},{"id":"morehouse-college","name":"Morehouse College","city":"Atlanta","state":"GA","lat":33.746,"lon":-84.413,"acceptance":12.0,"satLow":1361,"satHigh":1490,"actLow":28,"actHigh":31,"tuition":64553,"population":2451,"majors":["Studio Art","History","Sociology"],"website":"https://www.morehouse.edu","badge":"liberalArts","founded":1867,"ranking":171,"quality":61,"performance":56,"region":"South","crestHue1":284,"crestHue2":310},{"id":"howard-university","name":"Howard University","city":"Washington","state":"DC","lat":38.922,"lon":-77.02,"acceptance":8.1,"satLow":1404,"satHigh":1533,"actLow":28,"actHigh":31,"tuition":60959,"population":10375,"majors":["Biology","Business Administration","Political Science"],"website":"https://howard.edu","badge":"top","founded":1867,"ranking":172,"quality":62,"performance":67,"region":"South","crestHue1":182,"crestHue2":208},{"id":"hampton-university","name":"Hampton University","city":"Hampton","state":"VA","lat":37.029,"lon":-76.335,"acceptance":80.3,"satLow":1112,"satHigh":1240,"actLow":24,"actHigh":29,"tuition":36342,"population":7326,"majors":["Biology","Hospitality Management","Accounting"],"website":"https://home.hamptonu.edu","badge":"none","founded":1868,"ranking":173,"quality":56,"performance":60,"region":"South","crestHue1":21,"crestHue2":47},{"id":"fisk-university","name":"Fisk University","city":"Nashville","state":"TN","lat":36.169,"lon":-86.813,"acceptance":14.6,"satLow":1273,"satHigh":1378,"actLow":31,"actHigh":34,"tuition":64827,"population":1800,"majors":["Sociology","History","Economics"],"website":"https://www.fisk.edu","badge":"liberalArts","founded":1866,"ranking":174,"quality":60,"performance":63,"region":"South","crestHue1":289,"crestHue2":315},{"id":"williams-college","name":"Williams College","city":"Williamstown","state":"MA","lat":42.712,"lon":-73.203,"acceptance":29.2,"satLow":1261,"satHigh":1380,"actLow":29,"actHigh":33,"tuition":56785,"population":2905,"majors":["Sociology","Environmental Studies","Studio Art"],"website":"https://www.williams.edu","badge":"liberalArts","founded":1793,"ranking":175,"quality":62,"performance":57,"region":"Northeast","crestHue1":261,"crestHue2":287},{"id":"amherst-college","name":"Amherst College","city":"Amherst","state":"MA","lat":42.371,"lon":-72.517,"acceptance":39.2,"satLow":1388,"satHigh":1491,"actLow":28,"actHigh":32,"tuition":66029,"population":1037,"majors":["Studio Art","Political Science","Environmental Studies"],"website":"https://www.amherst.edu","badge":"liberalArts","founded":1821,"ranking":176,"quality":59,"performance":63,"region":"Northeast","crestHue1":294,"crestHue2":320},{"id":"swarthmore-college","name":"Swarthmore College","city":"Swarthmore","state":"PA","lat":39.903,"lon":-75.354,"acceptance":8.8,"satLow":1283,"satHigh":1433,"actLow":30,"actHigh":34,"tuition":59817,"population":1086,"majors":["Economics","Political Science","Studio Art"],"website":"https://www.swarthmore.edu","badge":"liberalArts","founded":1864,"ranking":177,"quality":59,"performance":59,"region":"Northeast","crestHue1":296,"crestHue2":322},{"id":"wellesley-college","name":"Wellesley College","city":"Wellesley","state":"MA","lat":42.295,"lon":-71.305,"acceptance":23.9,"satLow":1324,"satHigh":1446,"actLow":30,"actHigh":33,"tuition":61046,"population":1471,"majors":["History","Studio Art","Music"],"website":"https://www.wellesley.edu","badge":"liberalArts","founded":1870,"ranking":178,"quality":56,"performance":57,"region":"Northeast","crestHue1":262,"crestHue2":288},{"id":"pomona-college","name":"Pomona College","city":"Claremont","state":"CA","lat":34.097,"lon":-117.712,"acceptance":12.7,"satLow":1352,"satHigh":1478,"actLow":32,"actHigh":35,"tuition":63021,"population":1513,"majors":["Music","Environmental Studies","Sociology"],"website":"https://www.pomona.edu","badge":"liberalArts","founded":1887,"ranking":179,"quality":55,"performance":66,"region":"West","crestHue1":275,"crestHue2":301},{"id":"bowdoin-college","name":"Bowdoin College","city":"Brunswick","state":"ME","lat":43.909,"lon":-69.963,"acceptance":30.4,"satLow":1303,"satHigh":1435,"actLow":29,"actHigh":33,"tuition":63519,"population":2925,"majors":["Political Science","History","Music"],"website":"https://www.bowdoin.edu","badge":"liberalArts","founded":1794,"ranking":180,"quality":60,"performance":64,"region":"Northeast","crestHue1":270,"crestHue2":296},{"id":"middlebury-college","name":"Middlebury College","city":"Middlebury","state":"VT","lat":44.015,"lon":-73.174,"acceptance":27.3,"satLow":1294,"satHigh":1437,"actLow":32,"actHigh":36,"tuition":58657,"population":1845,"majors":["English","Environmental Studies","Political Science"],"website":"https://www.middlebury.edu","badge":"liberalArts","founded":1800,"ranking":181,"quality":56,"performance":61,"region":"Northeast","crestHue1":273,"crestHue2":299},{"id":"colby-college","name":"Colby College","city":"Waterville","state":"ME","lat":44.563,"lon":-69.662,"acceptance":29.7,"satLow":1311,"satHigh":1447,"actLow":28,"actHigh":31,"tuition":66012,"population":2802,"majors":["History","Philosophy","English"],"website":"https://www.colby.edu","badge":"liberalArts","founded":1813,"ranking":182,"quality":55,"performance":63,"region":"Northeast","crestHue1":260,"crestHue2":286},{"id":"bates-college","name":"Bates College","city":"Lewiston","state":"ME","lat":44.106,"lon":-70.204,"acceptance":32.6,"satLow":1305,"satHigh":1449,"actLow":32,"actHigh":36,"tuition":65350,"population":2167,"majors":["Philosophy","Sociology","Economics"],"website":"https://www.bates.edu","badge":"liberalArts","founded":1855,"ranking":183,"quality":55,"performance":59,"region":"Northeast","crestHue1":299,"crestHue2":325},{"id":"colgate-university","name":"Colgate University","city":"Hamilton","state":"NY","lat":42.818,"lon":-75.538,"acceptance":20.6,"satLow":1298,"satHigh":1400,"actLow":32,"actHigh":35,"tuition":62730,"population":2033,"majors":["Economics","Biology","Environmental Studies"],"website":"https://www.colgate.edu","badge":"liberalArts","founded":1819,"ranking":184,"quality":57,"performance":60,"region":"Northeast","crestHue1":295,"crestHue2":321},{"id":"hamilton-college","name":"Hamilton College","city":"Clinton","state":"NY","lat":43.058,"lon":-75.408,"acceptance":41.2,"satLow":1295,"satHigh":1401,"actLow":32,"actHigh":36,"tuition":56749,"population":908,"majors":["Biology","History","English"],"website":"https://www.hamilton.edu","badge":"liberalArts","founded":1793,"ranking":185,"quality":54,"performance":64,"region":"Northeast","crestHue1":286,"crestHue2":312},{"id":"vassar-college","name":"Vassar College","city":"Poughkeepsie","state":"NY","lat":41.684,"lon":-73.897,"acceptance":12.3,"satLow":1390,"satHigh":1514,"actLow":32,"actHigh":36,"tuition":56170,"population":2468,"majors":["Environmental Studies","Sociology","History"],"website":"https://www.vassar.edu","badge":"liberalArts","founded":1861,"ranking":186,"quality":55,"performance":58,"region":"Northeast","crestHue1":270,"crestHue2":296},{"id":"wesleyan-university","name":"Wesleyan University","city":"Middletown","state":"CT","lat":41.556,"lon":-72.657,"acceptance":31.4,"satLow":1333,"satHigh":1464,"actLow":32,"actHigh":35,"tuition":66696,"population":1790,"majors":["Economics","History","English"],"website":"https://www.wesleyan.edu","badge":"liberalArts","founded":1831,"ranking":187,"quality":55,"performance":61,"region":"Northeast","crestHue1":287,"crestHue2":313},{"id":"haverford-college","name":"Haverford College","city":"Haverford","state":"PA","lat":40.01,"lon":-75.301,"acceptance":23.1,"satLow":1298,"satHigh":1401,"actLow":30,"actHigh":34,"tuition":66810,"population":1276,"majors":["Biology","Philosophy","Sociology"],"website":"https://www.haverford.edu","badge":"liberalArts","founded":1833,"ranking":188,"quality":58,"performance":61,"region":"Northeast","crestHue1":290,"crestHue2":316},{"id":"claremont-mckenna-college","name":"Claremont McKenna College","city":"Claremont","state":"CA","lat":34.101,"lon":-117.708,"acceptance":31.7,"satLow":1374,"satHigh":1494,"actLow":28,"actHigh":32,"tuition":55770,"population":1345,"majors":["History","Studio Art","Biology"],"website":"https://www.cmc.edu","badge":"liberalArts","founded":1946,"ranking":189,"quality":57,"performance":63,"region":"West","crestHue1":261,"crestHue2":287},{"id":"harvey-mudd-college","name":"Harvey Mudd College","city":"Claremont","state":"CA","lat":34.106,"lon":-117.71,"acceptance":24.5,"satLow":1386,"satHigh":1494,"actLow":29,"actHigh":32,"tuition":58433,"population":929,"majors":["English","Studio Art","History"],"website":"https://www.hmc.edu","badge":"liberalArts","founded":1955,"ranking":190,"quality":56,"performance":55,"region":"West","crestHue1":278,"crestHue2":304},{"id":"scripps-college","name":"Scripps College","city":"Claremont","state":"CA","lat":34.102,"lon":-117.706,"acceptance":40.7,"satLow":1339,"satHigh":1475,"actLow":28,"actHigh":31,"tuition":64635,"population":2016,"majors":["History","Economics","English"],"website":"https://www.scrippscollege.edu","badge":"liberalArts","founded":1926,"ranking":191,"quality":55,"performance":54,"region":"West","crestHue1":274,"crestHue2":300},{"id":"pitzer-college","name":"Pitzer College","city":"Claremont","state":"CA","lat":34.103,"lon":-117.706,"acceptance":19.7,"satLow":1351,"satHigh":1455,"actLow":31,"actHigh":34,"tuition":59139,"population":1660,"majors":["Political Science","Philosophy","Studio Art"],"website":"https://www.pitzer.edu","badge":"liberalArts","founded":1963,"ranking":192,"quality":51,"performance":62,"region":"West","crestHue1":289,"crestHue2":315},{"id":"grinnell-college","name":"Grinnell College","city":"Grinnell","state":"IA","lat":41.744,"lon":-92.722,"acceptance":27.5,"satLow":1378,"satHigh":1515,"actLow":31,"actHigh":34,"tuition":59015,"population":1358,"majors":["Philosophy","Studio Art","History"],"website":"https://www.grinnell.edu","badge":"liberalArts","founded":1846,"ranking":193,"quality":58,"performance":54,"region":"Midwest","crestHue1":268,"crestHue2":294},{"id":"carleton-college","name":"Carleton College","city":"Northfield","state":"MN","lat":44.462,"lon":-93.157,"acceptance":30.2,"satLow":1395,"satHigh":1527,"actLow":32,"actHigh":36,"tuition":63418,"population":2585,"majors":["Economics","English","Music"],"website":"https://www.carleton.edu","badge":"liberalArts","founded":1866,"ranking":194,"quality":56,"performance":56,"region":"Midwest","crestHue1":260,"crestHue2":286},{"id":"macalester-college","name":"Macalester College","city":"St. Paul","state":"MN","lat":44.938,"lon":-93.17,"acceptance":13.2,"satLow":1331,"satHigh":1439,"actLow":27,"actHigh":31,"tuition":64433,"population":1725,"majors":["English","Biology","History"],"website":"https://www.macalester.edu","badge":"liberalArts","founded":1874,"ranking":195,"quality":52,"performance":57,"region":"Midwest","crestHue1":261,"crestHue2":287},{"id":"oberlin-college","name":"Oberlin College","city":"Oberlin","state":"OH","lat":41.291,"lon":-82.22,"acceptance":12.1,"satLow":1276,"satHigh":1395,"actLow":32,"actHigh":36,"tuition":66835,"population":1918,"majors":["Philosophy","English","Environmental Studies"],"website":"https://www.oberlin.edu","badge":"liberalArts","founded":1833,"ranking":196,"quality":53,"performance":52,"region":"Midwest","crestHue1":264,"crestHue2":290},{"id":"kenyon-college","name":"Kenyon College","city":"Gambier","state":"OH","lat":40.386,"lon":-82.398,"acceptance":16.0,"satLow":1321,"satHigh":1460,"actLow":31,"actHigh":34,"tuition":58430,"population":3075,"majors":["Environmental Studies","Biology","Philosophy"],"website":"https://www.kenyon.edu","badge":"liberalArts","founded":1824,"ranking":197,"quality":56,"performance":56,"region":"Midwest","crestHue1":292,"crestHue2":318},{"id":"davidson-college","name":"Davidson College","city":"Davidson","state":"NC","lat":35.499,"lon":-80.747,"acceptance":29.3,"satLow":1294,"satHigh":1403,"actLow":32,"actHigh":36,"tuition":64576,"population":1374,"majors":["Biology","Political Science","Music"],"website":"https://www.davidson.edu","badge":"liberalArts","founded":1837,"ranking":198,"quality":50,"performance":54,"region":"South","crestHue1":267,"crestHue2":293},{"id":"washington-and-lee-university","name":"Washington and Lee University","city":"Lexington","state":"VA","lat":37.786,"lon":-79.443,"acceptance":27.6,"satLow":1353,"satHigh":1454,"actLow":28,"actHigh":32,"tuition":64292,"population":1789,"majors":["Political Science","Biology","Music"],"website":"https://www.wlu.edu","badge":"liberalArts","founded":1749,"ranking":199,"quality":55,"performance":57,"region":"South","crestHue1":264,"crestHue2":290},{"id":"bucknell-university","name":"Bucknell University","city":"Lewisburg","state":"PA","lat":40.954,"lon":-76.885,"acceptance":25.1,"satLow":1373,"satHigh":1515,"actLow":27,"actHigh":31,"tuition":56429,"population":2256,"majors":["English","Studio Art","Biology"],"website":"https://www.bucknell.edu","badge":"liberalArts","founded":1846,"ranking":200,"quality":49,"performance":61,"region":"Northeast","crestHue1":294,"crestHue2":320},{"id":"trinity-college","name":"Trinity College","city":"Hartford","state":"CT","lat":41.746,"lon":-72.694,"acceptance":9.4,"satLow":1284,"satHigh":1419,"actLow":32,"actHigh":36,"tuition":62632,"population":1194,"majors":["Political Science","History","Environmental Studies"],"website":"https://www.trincoll.edu","badge":"liberalArts","founded":1823,"ranking":201,"quality":51,"performance":60,"region":"Northeast","crestHue1":266,"crestHue2":292},{"id":"connecticut-college","name":"Connecticut College","city":"New London","state":"CT","lat":41.378,"lon":-72.104,"acceptance":22.8,"satLow":1282,"satHigh":1391,"actLow":31,"actHigh":34,"tuition":63436,"population":2715,"majors":["Economics","Environmental Studies","Philosophy"],"website":"https://www.conncoll.edu","badge":"liberalArts","founded":1911,"ranking":202,"quality":53,"performance":58,"region":"Northeast","crestHue1":286,"crestHue2":312},{"id":"skidmore-college","name":"Skidmore College","city":"Saratoga Springs","state":"NY","lat":43.096,"lon":-73.786,"acceptance":19.7,"satLow":1397,"satHigh":1513,"actLow":30,"actHigh":33,"tuition":58931,"population":2324,"majors":["English","Environmental Studies","Philosophy"],"website":"https://www.skidmore.edu","badge":"liberalArts","founded":1903,"ranking":203,"quality":48,"performance":50,"region":"Northeast","crestHue1":279,"crestHue2":305},{"id":"union-college","name":"Union College","city":"Schenectady","state":"NY","lat":42.818,"lon":-73.928,"acceptance":35.6,"satLow":1377,"satHigh":1505,"actLow":28,"actHigh":32,"tuition":60250,"population":2084,"majors":["Biology","Studio Art","Environmental Studies"],"website":"https://www.union.edu","badge":"liberalArts","founded":1795,"ranking":204,"quality":53,"performance":54,"region":"Northeast","crestHue1":263,"crestHue2":289},{"id":"bard-college","name":"Bard College","city":"Annandale-on-Hudson","state":"NY","lat":42.014,"lon":-73.909,"acceptance":36.2,"satLow":1282,"satHigh":1406,"actLow":30,"actHigh":33,"tuition":60214,"population":1695,"majors":["Studio Art","English","Economics"],"website":"https://www.bard.edu","badge":"liberalArts","founded":1860,"ranking":205,"quality":50,"performance":59,"region":"Northeast","crestHue1":276,"crestHue2":302},{"id":"sarah-lawrence-college","name":"Sarah Lawrence College","city":"Bronxville","state":"NY","lat":40.951,"lon":-73.831,"acceptance":35.5,"satLow":1366,"satHigh":1508,"actLow":30,"actHigh":34,"tuition":61464,"population":2011,"majors":["Sociology","Biology","Studio Art"],"website":"https://www.sarahlawrence.edu","badge":"liberalArts","founded":1926,"ranking":206,"quality":51,"performance":52,"region":"Northeast","crestHue1":285,"crestHue2":311},{"id":"barnard-college","name":"Barnard College","city":"New York","state":"NY","lat":40.809,"lon":-73.963,"acceptance":37.7,"satLow":1293,"satHigh":1432,"actLow":29,"actHigh":32,"tuition":64161,"population":2071,"majors":["Economics","English","Political Science"],"website":"https://barnard.edu","badge":"liberalArts","founded":1889,"ranking":207,"quality":53,"performance":59,"region":"Northeast","crestHue1":295,"crestHue2":321},{"id":"smith-college","name":"Smith College","city":"Northampton","state":"MA","lat":42.318,"lon":-72.639,"acceptance":16.0,"satLow":1302,"satHigh":1413,"actLow":30,"actHigh":33,"tuition":55986,"population":2978,"majors":["Political Science","English","History"],"website":"https://www.smith.edu","badge":"liberalArts","founded":1871,"ranking":208,"quality":53,"performance":50,"region":"Northeast","crestHue1":268,"crestHue2":294},{"id":"mount-holyoke-college","name":"Mount Holyoke College","city":"South Hadley","state":"MA","lat":42.255,"lon":-72.575,"acceptance":29.5,"satLow":1254,"satHigh":1396,"actLow":28,"actHigh":31,"tuition":64212,"population":1314,"majors":["English","Studio Art","Biology"],"website":"https://www.mtholyoke.edu","badge":"liberalArts","founded":1837,"ranking":209,"quality":51,"performance":55,"region":"Northeast","crestHue1":270,"crestHue2":296},{"id":"bryn-mawr-college","name":"Bryn Mawr College","city":"Bryn Mawr","state":"PA","lat":40.024,"lon":-75.316,"acceptance":33.2,"satLow":1345,"satHigh":1470,"actLow":29,"actHigh":32,"tuition":57368,"population":1451,"majors":["Political Science","Environmental Studies","English"],"website":"https://www.brynmawr.edu","badge":"liberalArts","founded":1885,"ranking":210,"quality":49,"performance":54,"region":"Northeast","crestHue1":264,"crestHue2":290},{"id":"reed-college","name":"Reed College","city":"Portland","state":"OR","lat":45.483,"lon":-122.633,"acceptance":10.1,"satLow":1261,"satHigh":1398,"actLow":28,"actHigh":31,"tuition":56516,"population":3193,"majors":["Economics","Environmental Studies","Political Science"],"website":"https://www.reed.edu","badge":"liberalArts","founded":1908,"ranking":211,"quality":54,"performance":51,"region":"West","crestHue1":276,"crestHue2":302},{"id":"whitman-college","name":"Whitman College","city":"Walla Walla","state":"WA","lat":46.07,"lon":-118.342,"acceptance":30.6,"satLow":1325,"satHigh":1475,"actLow":27,"actHigh":30,"tuition":56570,"population":2144,"majors":["Economics","Philosophy","Political Science"],"website":"https://www.whitman.edu","badge":"liberalArts","founded":1859,"ranking":212,"quality":50,"performance":57,"region":"West","crestHue1":271,"crestHue2":297},{"id":"occidental-college","name":"Occidental College","city":"Los Angeles","state":"CA","lat":34.128,"lon":-118.211,"acceptance":20.4,"satLow":1359,"satHigh":1471,"actLow":31,"actHigh":34,"tuition":60856,"population":2436,"majors":["Studio Art","Music","English"],"website":"https://www.oxy.edu","badge":"liberalArts","founded":1887,"ranking":213,"quality":48,"performance":48,"region":"West","crestHue1":296,"crestHue2":322},{"id":"colorado-college","name":"Colorado College","city":"Colorado Springs","state":"CO","lat":38.849,"lon":-104.821,"acceptance":19.8,"satLow":1268,"satHigh":1385,"actLow":29,"actHigh":33,"tuition":60306,"population":2260,"majors":["Biology","Economics","History"],"website":"https://www.coloradocollege.edu","badge":"liberalArts","founded":1874,"ranking":214,"quality":52,"performance":55,"region":"West","crestHue1":280,"crestHue2":306},{"id":"denison-university","name":"Denison University","city":"Granville","state":"OH","lat":40.066,"lon":-82.521,"acceptance":11.6,"satLow":1363,"satHigh":1505,"actLow":31,"actHigh":35,"tuition":61206,"population":1458,"majors":["Environmental Studies","History","Philosophy"],"website":"https://denison.edu","badge":"liberalArts","founded":1831,"ranking":215,"quality":47,"performance":56,"region":"Midwest","crestHue1":291,"crestHue2":317},{"id":"dickinson-college","name":"Dickinson College","city":"Carlisle","state":"PA","lat":40.203,"lon":-77.196,"acceptance":41.3,"satLow":1309,"satHigh":1443,"actLow":27,"actHigh":31,"tuition":65350,"population":1909,"majors":["Economics","Music","Sociology"],"website":"https://www.dickinson.edu","badge":"liberalArts","founded":1783,"ranking":216,"quality":48,"performance":57,"region":"Northeast","crestHue1":294,"crestHue2":320},{"id":"franklin-and-marshall-college","name":"Franklin & Marshall College","city":"Lancaster","state":"PA","lat":40.048,"lon":-76.316,"acceptance":17.6,"satLow":1280,"satHigh":1391,"actLow":29,"actHigh":32,"tuition":66956,"population":1736,"majors":["Environmental Studies","Political Science","Biology"],"website":"https://www.fandm.edu","badge":"liberalArts","founded":1787,"ranking":217,"quality":49,"performance":51,"region":"Northeast","crestHue1":280,"crestHue2":306},{"id":"gettysburg-college","name":"Gettysburg College","city":"Gettysburg","state":"PA","lat":39.834,"lon":-77.23,"acceptance":25.3,"satLow":1374,"satHigh":1494,"actLow":29,"actHigh":33,"tuition":55796,"population":1935,"majors":["Biology","Philosophy","Studio Art"],"website":"https://www.gettysburg.edu","badge":"liberalArts","founded":1832,"ranking":218,"quality":49,"performance":58,"region":"Northeast","crestHue1":277,"crestHue2":303},{"id":"lafayette-college","name":"Lafayette College","city":"Easton","state":"PA","lat":40.7,"lon":-75.207,"acceptance":25.8,"satLow":1293,"satHigh":1402,"actLow":27,"actHigh":31,"tuition":58956,"population":2273,"majors":["Sociology","Economics","Environmental Studies"],"website":"https://www.lafayette.edu","badge":"liberalArts","founded":1826,"ranking":219,"quality":49,"performance":51,"region":"Northeast","crestHue1":297,"crestHue2":323},{"id":"muhlenberg-college","name":"Muhlenberg College","city":"Allentown","state":"PA","lat":40.601,"lon":-75.492,"acceptance":24.9,"satLow":1394,"satHigh":1520,"actLow":32,"actHigh":35,"tuition":66207,"population":2438,"majors":["Music","Sociology","Biology"],"website":"https://www.muhlenberg.edu","badge":"liberalArts","founded":1848,"ranking":220,"quality":50,"performance":53,"region":"Northeast","crestHue1":269,"crestHue2":295},{"id":"ursinus-college","name":"Ursinus College","city":"Collegeville","state":"PA","lat":40.199,"lon":-75.45,"acceptance":24.7,"satLow":1320,"satHigh":1422,"actLow":29,"actHigh":33,"tuition":57166,"population":2358,"majors":["Biology","Music","History"],"website":"https://www.ursinus.edu","badge":"liberalArts","founded":1869,"ranking":221,"quality":48,"performance":56,"region":"Northeast","crestHue1":268,"crestHue2":294},{"id":"wheaton-college","name":"Wheaton College","city":"Norton","state":"MA","lat":41.966,"lon":-71.184,"acceptance":21.3,"satLow":1264,"satHigh":1379,"actLow":30,"actHigh":33,"tuition":66656,"population":1213,"majors":["Philosophy","Economics","Environmental Studies"],"website":"https://wheatoncollege.edu","badge":"liberalArts","founded":1834,"ranking":222,"quality":47,"performance":57,"region":"Northeast","crestHue1":297,"crestHue2":323},{"id":"hobart-and-william-smith-colleges","name":"Hobart and William Smith Colleges","city":"Geneva","state":"NY","lat":42.87,"lon":-76.978,"acceptance":14.5,"satLow":1350,"satHigh":1499,"actLow":31,"actHigh":35,"tuition":63971,"population":2986,"majors":["Political Science","Environmental Studies","Music"],"website":"https://www.hws.edu","badge":"liberalArts","founded":1822,"ranking":223,"quality":50,"performance":52,"region":"Northeast","crestHue1":275,"crestHue2":301},{"id":"university-of-california-santa-cruz","name":"University of California, Santa Cruz","city":"Santa Cruz","state":"CA","lat":36.974,"lon":-122.058,"acceptance":27.4,"satLow":1290,"satHigh":1436,"actLow":24,"actHigh":27,"tuition":32570,"population":35117,"majors":["Mechanical Engineering","Chemistry","Nursing"],"website":"https://www.ucsc.edu","badge":"publicElite","founded":1965,"ranking":224,"quality":43,"performance":50,"region":"West","crestHue1":149,"crestHue2":175},{"id":"university-of-california-riverside","name":"University of California, Riverside","city":"Riverside","state":"CA","lat":33.973,"lon":-117.328,"acceptance":32.3,"satLow":1256,"satHigh":1407,"actLow":29,"actHigh":33,"tuition":27443,"population":31193,"majors":["Communications","Nursing","Business Administration"],"website":"https://www.ucr.edu","badge":"publicElite","founded":1954,"ranking":225,"quality":49,"performance":47,"region":"West","crestHue1":150,"crestHue2":176},{"id":"university-of-california-merced","name":"University of California, Merced","city":"Merced","state":"CA","lat":37.365,"lon":-120.427,"acceptance":23.5,"satLow":1271,"satHigh":1395,"actLow":28,"actHigh":32,"tuition":19752,"population":20452,"majors":["Chemistry","Journalism","Agricultural Sciences"],"website":"https://www.ucmerced.edu","badge":"publicElite","founded":2005,"ranking":226,"quality":45,"performance":52,"region":"West","crestHue1":150,"crestHue2":176},{"id":"san-diego-state-university","name":"San Diego State University","city":"San Diego","state":"CA","lat":32.775,"lon":-117.071,"acceptance":65.3,"satLow":1021,"satHigh":1152,"actLow":26,"actHigh":29,"tuition":10087,"population":9110,"majors":["Hospitality Management","Nursing","Marketing"],"website":"https://www.sdsu.edu","badge":"none","founded":1897,"ranking":227,"quality":50,"performance":47,"region":"West","crestHue1":37,"crestHue2":63},{"id":"california-polytechnic-state-university","name":"California Polytechnic State University","city":"San Luis Obispo","state":"CA","lat":35.3,"lon":-120.662,"acceptance":55.0,"satLow":1090,"satHigh":1216,"actLow":26,"actHigh":30,"tuition":11354,"population":17762,"majors":["Accounting","Exercise Science","Nursing"],"website":"https://www.calpoly.edu","badge":"none","founded":1901,"ranking":228,"quality":49,"performance":48,"region":"West","crestHue1":12,"crestHue2":38},{"id":"university-of-nevada-reno","name":"University of Nevada, Reno","city":"Reno","state":"NV","lat":39.544,"lon":-119.816,"acceptance":39.8,"satLow":1125,"satHigh":1238,"actLow":20,"actHigh":25,"tuition":14602,"population":17794,"majors":["Marketing","Biology","Hospitality Management"],"website":"https://www.unr.edu","badge":"none","founded":1874,"ranking":229,"quality":46,"performance":47,"region":"West","crestHue1":31,"crestHue2":57},{"id":"university-of-nevada-las-vegas","name":"University of Nevada, Las Vegas","city":"Las Vegas","state":"NV","lat":36.108,"lon":-115.143,"acceptance":83.8,"satLow":1164,"satHigh":1282,"actLow":25,"actHigh":30,"tuition":14086,"population":19674,"majors":["Criminal Justice","Marketing","Communications"],"website":"https://www.unlv.edu","badge":"none","founded":1957,"ranking":230,"quality":44,"performance":45,"region":"West","crestHue1":32,"crestHue2":58},{"id":"university-of-new-mexico","name":"University of New Mexico","city":"Albuquerque","state":"NM","lat":35.084,"lon":-106.619,"acceptance":48.3,"satLow":1153,"satHigh":1272,"actLow":24,"actHigh":29,"tuition":9860,"population":10969,"majors":["Nursing","Education","Marketing"],"website":"https://www.unm.edu","badge":"none","founded":1889,"ranking":231,"quality":48,"performance":48,"region":"West","crestHue1":15,"crestHue2":41},{"id":"new-mexico-state-university","name":"New Mexico State University","city":"Las Cruces","state":"NM","lat":32.279,"lon":-106.751,"acceptance":73.1,"satLow":1095,"satHigh":1227,"actLow":23,"actHigh":26,"tuition":15315,"population":8968,"majors":["Nursing","Business Administration","Marketing"],"website":"https://nmsu.edu","badge":"none","founded":1888,"ranking":232,"quality":43,"performance":48,"region":"West","crestHue1":24,"crestHue2":50},{"id":"university-of-idaho","name":"University of Idaho","city":"Moscow","state":"ID","lat":46.729,"lon":-117.014,"acceptance":69.5,"satLow":1127,"satHigh":1281,"actLow":22,"actHigh":26,"tuition":9175,"population":17160,"majors":["Criminal Justice","Accounting","Communications"],"website":"https://www.uidaho.edu","badge":"none","founded":1889,"ranking":233,"quality":46,"performance":54,"region":"West","crestHue1":8,"crestHue2":34},{"id":"boise-state-university","name":"Boise State University","city":"Boise","state":"ID","lat":43.603,"lon":-116.203,"acceptance":65.6,"satLow":1032,"satHigh":1161,"actLow":22,"actHigh":25,"tuition":12906,"population":7446,"majors":["Criminal Justice","Education","Biology"],"website":"https://www.boisestate.edu","badge":"none","founded":1932,"ranking":234,"quality":48,"performance":50,"region":"West","crestHue1":10,"crestHue2":36},{"id":"montana-state-university","name":"Montana State University","city":"Bozeman","state":"MT","lat":45.668,"lon":-111.048,"acceptance":73.8,"satLow":1044,"satHigh":1158,"actLow":22,"actHigh":27,"tuition":14171,"population":12044,"majors":["Accounting","Exercise Science","Marketing"],"website":"https://www.montana.edu","badge":"none","founded":1893,"ranking":235,"quality":48,"performance":54,"region":"West","crestHue1":35,"crestHue2":61},{"id":"university-of-montana","name":"University of Montana","city":"Missoula","state":"MT","lat":46.86,"lon":-113.985,"acceptance":69.1,"satLow":1059,"satHigh":1189,"actLow":22,"actHigh":26,"tuition":11265,"population":10479,"majors":["Accounting","Education","Business Administration"],"website":"https://www.umt.edu","badge":"none","founded":1893,"ranking":236,"quality":43,"performance":54,"region":"West","crestHue1":19,"crestHue2":45},{"id":"university-of-wyoming","name":"University of Wyoming","city":"Laramie","state":"WY","lat":41.312,"lon":-105.583,"acceptance":68.7,"satLow":1068,"satHigh":1197,"actLow":20,"actHigh":24,"tuition":12248,"population":14267,"majors":["Marketing","Education","Biology"],"website":"https://www.uwyo.edu","badge":"none","founded":1886,"ranking":237,"quality":44,"performance":54,"region":"West","crestHue1":40,"crestHue2":66},{"id":"south-dakota-state-university","name":"South Dakota State University","city":"Brookings","state":"SD","lat":44.309,"lon":-96.783,"acceptance":87.1,"satLow":1105,"satHigh":1252,"actLow":22,"actHigh":26,"tuition":10852,"population":7736,"majors":["Business Administration","Education","Exercise Science"],"website":"https://www.sdstate.edu","badge":"none","founded":1881,"ranking":238,"quality":44,"performance":52,"region":"Midwest","crestHue1":20,"crestHue2":46},{"id":"university-of-south-dakota","name":"University of South Dakota","city":"Vermillion","state":"SD","lat":42.783,"lon":-96.929,"acceptance":62.4,"satLow":1039,"satHigh":1190,"actLow":20,"actHigh":24,"tuition":13250,"population":11521,"majors":["Marketing","Hospitality Management","Business Administration"],"website":"https://www.usd.edu","badge":"none","founded":1862,"ranking":239,"quality":40,"performance":50,"region":"Midwest","crestHue1":21,"crestHue2":47},{"id":"north-dakota-state-university","name":"North Dakota State University","city":"Fargo","state":"ND","lat":46.897,"lon":-96.802,"acceptance":70.4,"satLow":1158,"satHigh":1287,"actLow":20,"actHigh":23,"tuition":13909,"population":2335,"majors":["Marketing","Business Administration","Biology"],"website":"https://www.ndsu.edu","badge":"none","founded":1890,"ranking":240,"quality":47,"performance":54,"region":"Midwest","crestHue1":30,"crestHue2":56},{"id":"university-of-north-dakota","name":"University of North Dakota","city":"Grand Forks","state":"ND","lat":47.921,"lon":-97.075,"acceptance":82.0,"satLow":1165,"satHigh":1278,"actLow":25,"actHigh":29,"tuition":13811,"population":15608,"majors":["Marketing","Hospitality Management","Communications"],"website":"https://und.edu","badge":"none","founded":1883,"ranking":241,"quality":39,"performance":48,"region":"Midwest","crestHue1":31,"crestHue2":57},{"id":"university-of-nebraska-lincoln","name":"University of Nebraska-Lincoln","city":"Lincoln","state":"NE","lat":40.82,"lon":-96.702,"acceptance":42.5,"satLow":1299,"satHigh":1465,"actLow":26,"actHigh":31,"tuition":14049,"population":20050,"majors":["Nursing","Journalism","Civil Engineering"],"website":"https://www.unl.edu","badge":"publicElite","founded":1869,"ranking":242,"quality":41,"performance":49,"region":"Midwest","crestHue1":144,"crestHue2":170},{"id":"university-of-kansas","name":"University of Kansas","city":"Lawrence","state":"KS","lat":38.955,"lon":-95.266,"acceptance":28.9,"satLow":1240,"satHigh":1369,"actLow":27,"actHigh":32,"tuition":31213,"population":29603,"majors":["Agricultural Sciences","Kinesiology","Nursing"],"website":"https://www.ku.edu","badge":"publicElite","founded":1865,"ranking":243,"quality":43,"performance":42,"region":"Midwest","crestHue1":150,"crestHue2":176},{"id":"kansas-state-university","name":"Kansas State University","city":"Manhattan","state":"KS","lat":39.191,"lon":-96.585,"acceptance":81.5,"satLow":1026,"satHigh":1185,"actLow":23,"actHigh":27,"tuition":9905,"population":8171,"majors":["Nursing","Business Administration","Marketing"],"website":"https://www.k-state.edu","badge":"none","founded":1863,"ranking":244,"quality":40,"performance":53,"region":"Midwest","crestHue1":38,"crestHue2":64},{"id":"iowa-state-university","name":"Iowa State University","city":"Ames","state":"IA","lat":42.027,"lon":-93.648,"acceptance":48.7,"satLow":1251,"satHigh":1409,"actLow":29,"actHigh":32,"tuition":23185,"population":30734,"majors":["Journalism","Kinesiology","Nursing"],"website":"https://www.iastate.edu","badge":"publicElite","founded":1858,"ranking":245,"quality":46,"performance":43,"region":"Midwest","crestHue1":135,"crestHue2":161},{"id":"university-of-wisconsin-milwaukee","name":"University of Wisconsin-Milwaukee","city":"Milwaukee","state":"WI","lat":43.079,"lon":-87.882,"acceptance":68.8,"satLow":1154,"satHigh":1284,"actLow":24,"actHigh":29,"tuition":14922,"population":20921,"majors":["Exercise Science","Marketing","Education"],"website":"https://uwm.edu","badge":"none","founded":1956,"ranking":246,"quality":44,"performance":51,"region":"Midwest","crestHue1":25,"crestHue2":51},{"id":"university-of-memphis","name":"University of Memphis","city":"Memphis","state":"TN","lat":35.119,"lon":-89.937,"acceptance":50.6,"satLow":1070,"satHigh":1212,"actLow":20,"actHigh":25,"tuition":11466,"population":5424,"majors":["Nursing","Biology","Exercise Science"],"website":"https://www.memphis.edu","badge":"none","founded":1912,"ranking":247,"quality":41,"performance":50,"region":"South","crestHue1":13,"crestHue2":39},{"id":"east-carolina-university","name":"East Carolina University","city":"Greenville","state":"NC","lat":35.606,"lon":-77.365,"acceptance":80.6,"satLow":1077,"satHigh":1225,"actLow":20,"actHigh":25,"tuition":47230,"population":2780,"majors":["Business Administration","Education","Hospitality Management"],"website":"https://www.ecu.edu","badge":"none","founded":1907,"ranking":248,"quality":45,"performance":48,"region":"South","crestHue1":40,"crestHue2":66},{"id":"university-of-alabama-at-birmingham","name":"University of Alabama at Birmingham","city":"Birmingham","state":"AL","lat":33.502,"lon":-86.809,"acceptance":43.7,"satLow":1042,"satHigh":1185,"actLow":26,"actHigh":31,"tuition":13700,"population":6523,"majors":["Communications","Business Administration","Accounting"],"website":"https://www.uab.edu","badge":"none","founded":1969,"ranking":249,"quality":42,"performance":49,"region":"South","crestHue1":42,"crestHue2":68},{"id":"auburn-university-at-montgomery","name":"Auburn University at Montgomery","city":"Montgomery","state":"AL","lat":32.365,"lon":-86.18,"acceptance":82.7,"satLow":1180,"satHigh":1324,"actLow":20,"actHigh":24,"tuition":33821,"population":5779,"majors":["Nursing","Accounting","Exercise Science"],"website":"https://www.aum.edu","badge":"none","founded":1967,"ranking":250,"quality":40,"performance":44,"region":"South","crestHue1":35,"crestHue2":61}];
+
+const REGION_COLORS = { Northeast:'#7c2430', Midwest:'#2f4a35', South:'#a97e39', West:'#0d2038' };
+const BADGE_LABEL = { ivy:'Ivy', top:'Top 25', publicElite:'Public Elite', liberalArts:'Liberal Arts Elite', none:'' };
+const BADGE_COLOR_VAR = { ivy:'var(--oxblood)', top:'var(--gold)', publicElite:'var(--ivy)', liberalArts:'var(--plum)' };
+
+const TIP_TEMPLATES = {
+  top: [
+    'Present a transcript of sustained rigor across core disciplines; {name} weighs consistency as heavily as peak achievement.',
+    'Cultivate genuine depth in one or two pursuits, supported by recommendations that speak to your particular habits of mind.',
+    'Write essays that reveal authentic voice and specific reasons {name} suits your intended path, rather than generic praise.',
+    'Pursue leadership defined by real responsibility and measurable impact within your school or community.'
+  ],
+  publicElite: [
+    'Excel within your state\'s standard college-preparatory curriculum; {name} places substantial weight on class rank and GPA.',
+    'Identify your intended major early, as many programs at {name} admit directly into competitive schools or colleges.',
+    'Consider the Honors College, if offered, for a smaller-cohort experience within a large public setting.',
+    'Complete supplemental scholarship applications promptly, since merit aid at {name} is often awarded on a rolling basis.'
+  ],
+  liberalArts: [
+    'Demonstrate genuine fit with a small, seminar-based learning environment; {name} reads essays closely for authentic voice.',
+    'Show intellectual curiosity across disciplines, since the liberal arts model at {name} rewards breadth alongside depth.',
+    'Visit or engage virtually if possible; demonstrated interest matters meaningfully in {name}\'s holistic review.',
+    'Seek recommendations from teachers who can describe your contribution to class discussion, not only your grades.'
+  ],
+  none: [
+    'Maintain a solid, well-rounded transcript and submit a complete application well ahead of {name}\'s stated deadlines.',
+    'Highlight extracurricular commitment and any leadership roles, however modest, held over a sustained period.',
+    'Write a sincere personal statement that explains, in your own words, why {name} fits your goals.',
+    'Investigate merit scholarships and honors programs at {name}, which often use the general application for consideration.'
+  ]
+};
+
+let currentView = 'gallery';
+let compareSelection = [];
+let visibleCount = 60;
+const PAGE_SIZE = 60;
+const MAX_COMPARE = 4;
+
+/* ============================================================
+   HELPERS
+   ============================================================ */
+function fmtMoney(n){ return n === 0 ? 'Fully Sponsored' : ('$' + n.toLocaleString('en-US')); }
+function fmtPop(n){ return n.toLocaleString('en-US'); }
+function sizeCategory(pop){ return pop < 5000 ? 'small' : (pop <= 20000 ? 'medium' : 'large'); }
+function tuitionCategory(t){ return t < 20000 ? 'low' : (t <= 55000 ? 'mid' : 'high'); }
+function initials(name){
+  const stop = new Set(['of','the','and','at','in']);
+  return name.split(/[\s,]+/).filter(w=>w && !stop.has(w.toLowerCase())).map(w=>w[0]).join('').slice(0,3).toUpperCase();
+}
+function crestGradient(c){ return `linear-gradient(135deg, hsl(${c.crestHue1} 46% 38%), hsl(${c.crestHue2} 52% 28%))`; }
+function getTips(c){ return c.tips || TIP_TEMPLATES[c.badge].map(t=>t.replace(/\{name\}/g, c.name)); }
+
+/* ============================================================
+   RENDER: CARDS
+   ============================================================ */
+function getFiltered(){
+  const q = document.getElementById('searchInput').value.trim().toLowerCase();
+  const type = document.getElementById('filterType').value;
+  const region = document.getElementById('filterRegion').value;
+  const size = document.getElementById('filterSize').value;
+  const tuitionTier = document.getElementById('filterTuition').value;
+  const sortBy = document.getElementById('sortBy').value;
+
+  let list = COLLEGES.filter(c=>{
+    if(q && !(c.name.toLowerCase().includes(q) || c.city.toLowerCase().includes(q) || c.state.toLowerCase().includes(q))) return false;
+    if(type !== 'all' && c.badge !== type) return false;
+    if(region !== 'all' && c.region !== region) return false;
+    if(size !== 'all' && sizeCategory(c.population) !== size) return false;
+    if(tuitionTier !== 'all' && tuitionCategory(c.tuition) !== tuitionTier) return false;
+    return true;
+  });
+
+  list.sort((a,b)=>{
+    switch(sortBy){
+      case 'selectivity': return a.acceptance - b.acceptance;
+      case 'quality': return b.quality - a.quality;
+      case 'performance': return b.performance - a.performance;
+      case 'name': return a.name.localeCompare(b.name);
+      case 'tuition': return a.tuition - b.tuition;
+      case 'population': return b.population - a.population;
+      default: return a.ranking - b.ranking;
+    }
+  });
+  return list;
+}
+
+function cardTemplate(c, i){
+  const isSelected = compareSelection.includes(c.id);
+  const stickerHtml = c.badge !== 'none' ? `<span class="sticker sticker-${c.badge}">${BADGE_LABEL[c.badge]}</span>` : '';
+  return `
+    <article class="card" style="animation-delay:${Math.min(i*0.03,0.5)}s" data-id="${c.id}">
+      ${stickerHtml}
+      <div class="card-top">
+        <div class="crest-badge ${isSelected?'selected':''}" style="background:${crestGradient(c)}" data-crest="${c.id}" title="Mark for comparison">${initials(c.name)}</div>
+        <div class="card-title">
+          <h3>${c.name}</h3>
+          <p class="loc">${c.city}, ${c.state} &middot; Est. ${c.founded}</p>
+          <span class="rank">Fame Rank &nbsp;#${c.ranking}</span>
+        </div>
+      </div>
+      <div class="card-stats">
+        <div class="stat-item"><span class="label">Admission Rate</span><span class="value">${c.acceptance}%</span></div>
+        <div class="stat-item"><span class="label">Tuition (Annual)</span><span class="value">${fmtMoney(c.tuition)}</span></div>
+        <div class="stat-item"><span class="label">SAT Range</span><span class="value">${c.satLow}&ndash;${c.satHigh}</span></div>
+        <div class="stat-item"><span class="label">ACT Range</span><span class="value">${c.actLow}&ndash;${c.actHigh}</span></div>
+        <div class="stat-item"><span class="label">Undergraduates</span><span class="value">${fmtPop(c.population)}</span></div>
+        <div class="stat-item"><span class="label">Region</span><span class="value">${c.region}</span></div>
+      </div>
+      <div class="score-row">
+        <div class="score-item">
+          <span class="label">Quality Score</span>
+          <div class="score-bar"><div class="score-fill" data-fill="${c.quality}"></div></div>
+          <span class="score-value">${c.quality} / 100</span>
+        </div>
+        <div class="score-item">
+          <span class="label">Student Performance</span>
+          <div class="score-bar"><div class="score-fill" data-fill="${c.performance}"></div></div>
+          <span class="score-value">${c.performance} / 100</span>
+        </div>
+      </div>
+      <div class="card-majors">
+        <span class="label">Notable Programs</span>
+        <div class="chip-row">${c.majors.slice(0,3).map(m=>`<span class="chip">${m}</span>`).join('')}</div>
+      </div>
+      <div class="card-actions">
+        <button data-open="${c.id}">View Dossier</button>
+        <a href="${c.website}" target="_blank" rel="noopener"><button type="button">Visit Site</button></a>
+      </div>
+    </article>`;
+}
+
+function renderGallery(resetPage){
+  if(resetPage) visibleCount = PAGE_SIZE;
+  const gallery = document.getElementById('gallery');
+  const list = getFiltered();
+  document.getElementById('resultCount').textContent = list.length + ' institution' + (list.length===1?'':'s') + ' shown';
+
+  if(list.length === 0){
+    gallery.innerHTML = '<div class="empty-state">No institutions satisfy the present criteria. Kindly adjust your filters.</div>';
+    document.getElementById('loadMoreWrap').style.display = 'none';
+    return;
+  }
+
+  const slice = list.slice(0, visibleCount);
+  gallery.innerHTML = slice.map((c,i)=>cardTemplate(c,i)).join('');
+
+  requestAnimationFrame(()=>{
+    gallery.querySelectorAll('[data-fill]').forEach(el=>{
+      const v = el.getAttribute('data-fill');
+      requestAnimationFrame(()=>{ el.style.width = v + '%'; });
+    });
+  });
+
+  gallery.querySelectorAll('[data-crest]').forEach(el=>{
+    el.addEventListener('click', (e)=>{ e.stopPropagation(); toggleCompare(el.getAttribute('data-crest')); });
+  });
+  gallery.querySelectorAll('[data-open]').forEach(el=>{
+    el.addEventListener('click', ()=> openDetail(el.getAttribute('data-open')));
+  });
+  gallery.querySelectorAll('.card').forEach(el=>{
+    el.addEventListener('click', (e)=>{
+      if(e.target.closest('[data-crest]') || e.target.closest('button') || e.target.closest('a')) return;
+      openDetail(el.getAttribute('data-id'));
+    });
+  });
+
+  document.getElementById('loadMoreWrap').style.display = (visibleCount < list.length) ? 'block' : 'none';
+}
+
+/* ============================================================
+   RENDER: MAP
+   ============================================================ */
+function project(lat, lon){
+  const lonMin=-125, lonMax=-66, latMin=24, latMax=50;
+  const x = ((lon-lonMin)/(lonMax-lonMin))*100;
+  const y = 100 - ((lat-latMin)/(latMax-latMin))*100;
+  return { x: Math.max(1,Math.min(99,x)), y: Math.max(4,Math.min(96,y)) };
+}
+
+function renderMap(){
+  const frame = document.getElementById('mapFrame');
+  frame.querySelectorAll('.pin').forEach(p=>p.remove());
+  const list = getFiltered();
+  const frag = document.createDocumentFragment();
+  list.forEach(c=>{
+    const p = project(c.lat, c.lon);
+    const pin = document.createElement('div');
+    pin.className = 'pin';
+    pin.style.left = p.x + '%';
+    pin.style.top = p.y + '%';
+    const col = REGION_COLORS[c.region] || '#7c2430';
+    pin.innerHTML = `<div class="dot" style="background:${col}"></div><div class="tag">${c.name} &mdash; ${c.city}, ${c.state}</div>`;
+    pin.addEventListener('click', ()=> openDetail(c.id));
+    frag.appendChild(pin);
+  });
+  frame.appendChild(frag);
+}
+
+/* ============================================================
+   DETAIL MODAL
+   ============================================================ */
+function openDetail(id){
+  const c = COLLEGES.find(x=>x.id===id);
+  if(!c) return;
+  const modal = document.getElementById('detailModal');
+  const tips = getTips(c);
+  const badgeMini = c.badge !== 'none' ? `<span class="mini-badge" style="background:${BADGE_COLOR_VAR[c.badge]}; color:${c.badge==='top'?'var(--navy-deep)':'#fff'};">${BADGE_LABEL[c.badge]}</span>` : '';
+  modal.innerHTML = `
+    <div class="modal-header">
+      <button class="modal-close" id="closeDetail" aria-label="Close">&times;</button>
+      <div class="crest-badge" style="background:${crestGradient(c)}">${initials(c.name)}</div>
+      <div>
+        <h3>${c.name}</h3>
+        <p class="loc">${c.city}, ${c.state} &middot; Founded ${c.founded} &middot; Fame Rank #${c.ranking}</p>
+        ${c.motto ? `<p class="loc">"${c.motto}"${c.mottoT ? ' &mdash; ' + c.mottoT : ''}</p>` : ''}
+        <div class="badges-row">${badgeMini}</div>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div class="modal-stats">
+        <div class="stat-item"><span class="label">Admission Rate</span><span class="value">${c.acceptance}%</span></div>
+        <div class="stat-item"><span class="label">SAT Range</span><span class="value">${c.satLow}&ndash;${c.satHigh}</span></div>
+        <div class="stat-item"><span class="label">ACT Range</span><span class="value">${c.actLow}&ndash;${c.actHigh}</span></div>
+        <div class="stat-item"><span class="label">Annual Tuition</span><span class="value">${fmtMoney(c.tuition)}</span></div>
+        <div class="stat-item"><span class="label">Undergraduates</span><span class="value">${fmtPop(c.population)}</span></div>
+        <div class="stat-item"><span class="label">Region</span><span class="value">${c.region}</span></div>
+      </div>
+      <div class="modal-scores">
+        <div class="score-item">
+          <span class="label">Quality Score</span>
+          <div class="score-bar"><div class="score-fill" style="width:${c.quality}%"></div></div>
+          <span class="score-value">${c.quality} / 100</span>
+        </div>
+        <div class="score-item">
+          <span class="label">Student Performance</span>
+          <div class="score-bar"><div class="score-fill" style="width:${c.performance}%"></div></div>
+          <span class="score-value">${c.performance} / 100</span>
+        </div>
+      </div>
+      <div class="modal-section">
+        <h4>Notable Majors &amp; Programs</h4>
+        <div class="chip-row">${c.majors.map(m=>`<span class="chip">${m}</span>`).join('')}</div>
+      </div>
+      <div class="modal-section">
+        <h4>A Tutorial Toward Admission</h4>
+        <ul class="tips-list">${tips.map(t=>`<li>${t}</li>`).join('')}</ul>
+      </div>
+      <div class="modal-actions">
+        <a class="btn-formal primary" href="${c.website}" target="_blank" rel="noopener">Visit Official Site</a>
+        <button class="btn-formal ghost" id="detailCompareBtn">${compareSelection.includes(c.id)?'Remove from Comparison':'Add to Comparison'}</button>
+      </div>
+    </div>`;
+  document.getElementById('closeDetail').addEventListener('click', closeDetail);
+  document.getElementById('detailCompareBtn').addEventListener('click', ()=>{ toggleCompare(c.id); openDetail(c.id); });
+  document.getElementById('detailOverlay').classList.add('show');
+}
+function closeDetail(){ document.getElementById('detailOverlay').classList.remove('show'); }
+
+/* ============================================================
+   COMPARISON
+   ============================================================ */
+function toggleCompare(id){
+  const idx = compareSelection.indexOf(id);
+  if(idx > -1){
+    compareSelection.splice(idx,1);
+  } else {
+    if(compareSelection.length >= MAX_COMPARE){
+      showToast('The Registrar permits comparison of four institutions at most.');
+      return;
+    }
+    compareSelection.push(id);
+  }
+  renderGallery(false);
+  renderCompareTray();
+}
+
+function renderCompareTray(){
+  const tray = document.getElementById('compareTray');
+  const chips = document.getElementById('trayChips');
+  if(compareSelection.length === 0){
+    tray.classList.remove('show');
+    chips.innerHTML = '';
+    return;
+  }
+  tray.classList.add('show');
+  chips.innerHTML = compareSelection.map(id=>{
+    const c = COLLEGES.find(x=>x.id===id);
+    return `<span class="tray-chip">${c.name.length>26?c.name.slice(0,24)+'…':c.name}<button data-remove="${id}" aria-label="Remove">&times;</button></span>`;
+  }).join('');
+  chips.querySelectorAll('[data-remove]').forEach(btn=>{
+    btn.addEventListener('click', ()=> toggleCompare(btn.getAttribute('data-remove')));
+  });
+}
+
+function openCompareModal(){
+  if(compareSelection.length < 2){
+    showToast('Kindly select at least two institutions to compare.');
+    return;
+  }
+  const cs = compareSelection.map(id=>COLLEGES.find(x=>x.id===id));
+  const rows = [
+    ['Location', c=>`${c.city}, ${c.state}`],
+    ['Founded', c=>c.founded],
+    ['Fame Rank', c=>'#'+c.ranking],
+    ['Type', c=> c.badge==='none' ? 'Other Notable' : BADGE_LABEL[c.badge]],
+    ['Admission Rate', c=>c.acceptance+'%'],
+    ['SAT Range', c=>c.satLow+'&ndash;'+c.satHigh],
+    ['ACT Range', c=>c.actLow+'&ndash;'+c.actHigh],
+    ['Annual Tuition', c=>fmtMoney(c.tuition)],
+    ['Undergraduates', c=>fmtPop(c.population)],
+    ['Quality Score', c=>c.quality+' / 100'],
+    ['Student Performance', c=>c.performance+' / 100'],
+    ['Notable Programs', c=>c.majors.slice(0,3).join(', ')]
+  ];
+  const modal = document.getElementById('compareModal');
+  modal.innerHTML = `
+    <div class="modal-header">
+      <button class="modal-close" id="closeCompare" aria-label="Close">&times;</button>
+      <div>
+        <h3>A Comparison of Institutions</h3>
+        <p class="loc">${cs.map(c=>c.name).join(' &middot; ')}</p>
+      </div>
+    </div>
+    <div class="modal-body" style="overflow-x:auto;">
+      <table class="compare-table">
+        <thead><tr><th></th>${cs.map(c=>`<th>${c.name}</th>`).join('')}</tr></thead>
+        <tbody>
+          ${rows.map(([label,fn])=>`<tr><td class="attr-label">${label}</td>${cs.map(c=>`<td>${fn(c)}</td>`).join('')}</tr>`).join('')}
+        </tbody>
+      </table>
+    </div>`;
+  document.getElementById('closeCompare').addEventListener('click', ()=> document.getElementById('compareOverlay').classList.remove('show'));
+  document.getElementById('compareOverlay').classList.add('show');
+}
+
+/* ============================================================
+   TOAST
+   ============================================================ */
+let toastTimer;
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=> t.classList.remove('show'), 3200);
+}
+
+/* ============================================================
+   VIEW SWITCHING
+   ============================================================ */
+function setView(view){
+  currentView = view;
+  document.getElementById('viewGalleryBtn').classList.toggle('active', view==='gallery');
+  document.getElementById('viewMapBtn').classList.toggle('active', view==='map');
+  document.getElementById('gallery').style.display = view==='gallery' ? 'grid' : 'none';
+  document.getElementById('loadMoreWrap').style.display = (view==='gallery' && visibleCount < getFiltered().length) ? 'block' : 'none';
+  document.getElementById('mapSection').classList.toggle('active', view==='map');
+  if(view==='map') renderMap();
+}
+
+/* ============================================================
+   SCROLL REVEAL
+   ============================================================ */
+function initReveal(){
+  const els = document.querySelectorAll('[data-reveal]');
+  const io = new IntersectionObserver(entries=>{
+    entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('in-view'); });
+  }, { threshold:.3 });
+  els.forEach(el=>io.observe(el));
+}
+
+/* ============================================================
+   AMBIENT MUSIC (Web Audio API — synthesized, no external file)
+   ============================================================ */
+let audioCtx = null;
+let masterGain = null;
+let musicPlaying = false;
+let musicTimer = null;
+const CHORDS = [
+  [261.63, 329.63, 392.00],
+  [220.00, 277.18, 329.63],
+  [174.61, 220.00, 261.63],
+  [196.00, 246.94, 293.66]
+];
+let chordIndex = 0;
+
+function ensureAudio(){
+  if(!audioCtx){
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    masterGain = audioCtx.createGain();
+    masterGain.gain.value = document.getElementById('volumeSlider').value / 100 * 0.22;
+    masterGain.connect(audioCtx.destination);
+  }
+}
+function playChord(freqs, duration){
+  const now = audioCtx.currentTime;
+  freqs.forEach((f,i)=>{
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = i===0 ? 'triangle' : 'sine';
+    osc.frequency.value = f;
+    gain.gain.setValueAtTime(0, now);
+    gain.gain.linearRampToValueAtTime(1, now + 0.6);
+    gain.gain.linearRampToValueAtTime(0, now + duration);
+    osc.connect(gain);
+    gain.connect(masterGain);
+    osc.start(now);
+    osc.stop(now + duration + 0.1);
+  });
+}
+function scheduleMusic(){
+  playChord(CHORDS[chordIndex % CHORDS.length], 4.6);
+  chordIndex++;
+  musicTimer = setTimeout(scheduleMusic, 4300);
+}
+function toggleMusic(){
+  ensureAudio();
+  if(audioCtx.state === 'suspended') audioCtx.resume();
+  const panel = document.getElementById('audioPanel');
+  if(musicPlaying){
+    musicPlaying = false;
+    clearTimeout(musicTimer);
+    panel.classList.remove('playing');
+  } else {
+    musicPlaying = true;
+    panel.classList.add('playing');
+    scheduleMusic();
+  }
+}
+
+/* ============================================================
+   INIT
+   ============================================================ */
+function attachControlListeners(){
+  document.getElementById('searchInput').addEventListener('input', ()=>{ renderGallery(true); if(currentView==='map') renderMap(); });
+  ['filterType','filterRegion','filterSize','filterTuition','sortBy'].forEach(id=>{
+    document.getElementById(id).addEventListener('change', ()=>{ renderGallery(true); if(currentView==='map') renderMap(); });
+  });
+  document.getElementById('viewGalleryBtn').addEventListener('click', ()=> setView('gallery'));
+  document.getElementById('viewMapBtn').addEventListener('click', ()=> setView('map'));
+  document.getElementById('loadMoreBtn').addEventListener('click', ()=>{ visibleCount += PAGE_SIZE; renderGallery(false); });
+  document.getElementById('openCompare').addEventListener('click', openCompareModal);
+  document.getElementById('clearCompare').addEventListener('click', ()=>{ compareSelection = []; renderGallery(false); renderCompareTray(); });
+  document.getElementById('detailOverlay').addEventListener('click', (e)=>{ if(e.target.id==='detailOverlay') closeDetail(); });
+  document.getElementById('compareOverlay').addEventListener('click', (e)=>{ if(e.target.id==='compareOverlay') document.getElementById('compareOverlay').classList.remove('show'); });
+  document.addEventListener('keydown', (e)=>{
+    if(e.key === 'Escape'){
+      document.getElementById('detailOverlay').classList.remove('show');
+      document.getElementById('compareOverlay').classList.remove('show');
+    }
+  });
+  document.getElementById('audioToggle').addEventListener('click', toggleMusic);
+  document.getElementById('volumeSlider').addEventListener('input', (e)=>{
+    if(masterGain) masterGain.gain.value = e.target.value / 100 * 0.22;
+  });
+}
+
+function initHeroStats(){
+  const avg = (COLLEGES.reduce((s,c)=>s+c.acceptance,0) / COLLEGES.length).toFixed(1);
+  document.getElementById('statAvgAccept').textContent = avg + '%';
+  document.getElementById('statCount').textContent = COLLEGES.length;
+  document.getElementById('statIvy').textContent = COLLEGES.filter(c=>c.badge==='ivy').length;
+  document.getElementById('statTop').textContent = COLLEGES.filter(c=>c.ranking<=25).length;
+}
+
+(function init(){
+  initHeroStats();
+  renderGallery(true);
+  renderCompareTray();
+  attachControlListeners();
+  initReveal();
+})();
+</script>
+</body>
+</html>
