@@ -4,9 +4,20 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>The Collegiate Registry &mdash; A Formal Survey of 250 Leading American Universities</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;0,900;1,600&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Cormorant+SC:wght@500;600;700&display=swap" rel="stylesheet">
+<meta name="description" content="The Collegiate Registry — an illustrated, interactive survey of 250 leading American universities: compare, shortlist, see your Reach/Target/Likely fit, map them and estimate costs. Works offline.">
+<meta name="theme-color" content="#0d2038">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Registry">
+<meta property="og:title" content="The Collegiate Registry">
+<meta property="og:description" content="An illustrated survey of 250 leading American universities — compare, shortlist and find your fit.">
+<meta property="og:image" content="https://jaineil32624.github.io/The-Collegiate-Registry/docs/screenshots/social.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/svg+xml" href="icons/icon.svg">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="stylesheet" href="vendor/fonts.css">
 <style>
 
 /* ============================================================
@@ -425,6 +436,125 @@ footer p{ margin-top:10px; line-height:1.6; opacity:.85; max-width:660px; margin
 
 @media (prefers-reduced-motion: reduce){
   *, *::before, *::after{ animation-duration:.001s !important; transition-duration:.001s !important; }
+}
+
+/* ============================================================
+   EXTRAS — fit, shortlist, dock, cost estimator, comparison
+   ============================================================ */
+.x-actions{ display:flex; gap:6px; flex-wrap:wrap; }
+.x-btn{
+  display:inline-flex; align-items:center; gap:5px; border:1px solid var(--navy); background:transparent; color:var(--navy);
+  border-radius:3px; padding:5px 10px; font-family:var(--font-label); letter-spacing:.06em; font-size:.72rem; white-space:nowrap;
+  transition:background .25s var(--ease), color .25s var(--ease), transform .2s var(--ease-spring);
+}
+.x-btn:hover{ background:var(--navy); color:var(--parchment); transform:translateY(-1px); }
+.x-btn.on{ background:var(--oxblood); border-color:var(--oxblood); color:#fff; }
+.x-btn b{ font-family:var(--font-display); font-size:.72rem; background:var(--gold-pale); color:var(--navy-deep); border-radius:999px; padding:0 6px; min-width:18px; text-align:center; }
+#filterFit{ cursor:pointer; }
+
+.fit-pill{
+  display:inline-block; margin:7px 0 0 6px; font-family:var(--font-label); font-size:.66rem; letter-spacing:.1em; text-transform:uppercase;
+  padding:2px 8px; border-radius:2px; border:1px solid; vertical-align:middle;
+}
+.fit-note .fit-pill{ margin:0 2px; }
+.fit-reach{ color:var(--oxblood); border-color:var(--oxblood); background:rgba(124,36,48,.07); }
+.fit-target{ color:#7a5a1f; border-color:var(--gold); background:rgba(169,126,57,.12); }
+.fit-likely{ color:var(--ivy); border-color:var(--ivy); background:rgba(47,74,53,.09); }
+
+.card-actions .as-btn{
+  flex:1; display:flex; align-items:center; justify-content:center; padding:12px 8px; text-decoration:none; border-left:1px solid var(--parchment-line);
+  font-family:var(--font-label); font-size:.76rem; letter-spacing:.08em; color:var(--navy); transition:background .25s var(--ease), color .25s var(--ease);
+}
+.card-actions .as-btn:hover{ background:var(--navy); color:var(--parchment); }
+.card-actions .save-btn{ flex:0 0 auto; min-width:86px; border-left:1px solid var(--parchment-line) !important; color:var(--gold) !important; }
+.card-actions .save-btn.on{ color:var(--oxblood) !important; }
+.card-actions .save-btn:hover{ background:var(--gold-pale) !important; color:var(--oxblood) !important; }
+.save-btn.pop{ animation:savePop .45s var(--ease-spring); }
+@keyframes savePop{ 40%{ transform:scale(1.18); } }
+.card.is-saved{ border-color:var(--gold); box-shadow:0 0 0 1px var(--gold-light), 0 4px 14px rgba(13,32,56,.08); }
+
+.pin.saved .dot{ box-shadow:0 0 0 3px var(--gold-light), 0 2px 5px rgba(0,0,0,.3); }
+.pin.fit-likely .dot{ outline:2px solid rgba(47,74,53,.5); }
+
+/* floating dock */
+.audio-panel.compact{ padding:6px; gap:0; }
+.audio-panel.compact .audio-label, .audio-panel.compact input[type=range]{ display:none; }
+.audio-panel.compact:hover{ padding:8px 16px 8px 8px; gap:10px; }
+.audio-panel.compact:hover .audio-label, .audio-panel.compact:hover input[type=range]{ display:inline-block; }
+@media (max-width:1500px){ .controls{ padding-right:84px; } }
+.x-dock{ position:fixed; left:18px; bottom:18px; z-index:450; display:flex; gap:8px; align-items:center; }
+.x-dock button{
+  border:1px solid var(--gold); background:var(--navy); color:var(--gold-light); border-radius:999px; height:42px; padding:0 16px;
+  font-family:var(--font-label); letter-spacing:.08em; font-size:.78rem; box-shadow:var(--shadow-soft);
+  transition:transform .25s var(--ease-spring), opacity .3s var(--ease), background .25s var(--ease);
+}
+.x-dock button:hover{ transform:translateY(-2px); background:var(--oxblood); }
+#topBtn{ width:42px; padding:0; font-size:1.1rem; opacity:0; pointer-events:none; transform:translateY(10px); }
+.x-dock.scrolled #topBtn{ opacity:1; pointer-events:auto; transform:none; }
+body:has(.compare-tray.show) .x-dock{ bottom:96px; }
+
+/* dossier extras */
+.fit-gauge{ position:relative; height:12px; background:var(--parchment-dark); border-radius:6px; margin:30px 0 6px; }
+.fg-range{ position:absolute; top:0; bottom:0; background:linear-gradient(90deg, var(--gold), var(--oxblood)); border-radius:6px; opacity:.75; }
+.fg-me{ position:absolute; top:-6px; width:3px; height:24px; background:var(--navy); border-radius:2px; transform:translateX(-50%); animation:meIn .7s var(--ease-spring); }
+.fg-me span{ position:absolute; bottom:28px; left:50%; transform:translateX(-50%); white-space:nowrap; font-family:var(--font-label); font-size:.68rem; letter-spacing:.08em; background:var(--navy); color:var(--parchment); padding:2px 7px; border-radius:2px; }
+@keyframes meIn{ from{ transform:translateX(-50%) scaleY(0); } }
+.fg-scale{ display:flex; justify-content:space-between; font-size:.74rem; color:#6c6551; font-style:italic; }
+.fit-note{ font-size:.95rem; margin-top:10px; line-height:1.6; }
+.link-btn{ background:none; border:none; padding:0; color:var(--oxblood); text-decoration:underline; font:inherit; font-style:italic; }
+.cost{ background:#fffdf8; border:1px solid var(--parchment-line); border-radius:6px; padding:16px 18px; }
+.cost label{ display:flex; align-items:center; gap:12px; font-family:var(--font-label); font-size:.78rem; letter-spacing:.06em; color:var(--navy); margin-bottom:8px; }
+.cost label b{ font-family:var(--font-display); min-width:44px; color:var(--oxblood); }
+.cost input[type=range]{ flex:1; accent-color:var(--oxblood); }
+.cost-years{ display:grid; gap:6px; margin:10px 0; }
+.cost-years > div{ display:grid; grid-template-columns:62px 1fr 92px; align-items:center; gap:10px; font-size:.86rem; }
+.cost-years span{ font-family:var(--font-label); font-size:.72rem; letter-spacing:.08em; color:#6c6551; }
+.cost-years b{ font-family:var(--font-display); text-align:right; color:var(--navy); }
+.cy-bar{ height:8px; background:var(--parchment-dark); border-radius:4px; overflow:hidden; }
+.cy-bar i{ display:block; height:100%; background:linear-gradient(90deg, var(--gold), var(--oxblood)); border-radius:4px; transition:width .5s var(--ease); }
+.cost-total{ border-top:1px dashed var(--parchment-line); padding-top:10px; font-style:italic; }
+.cost-total b{ font-family:var(--font-display); font-style:normal; font-size:1.3rem; color:var(--oxblood); margin-left:6px; }
+.cost-note{ font-size:.78rem; color:#7a7360; font-style:italic; margin-top:6px; }
+.d-nav{ display:flex; justify-content:space-between; gap:12px; margin-top:22px; padding-top:16px; border-top:1px dashed var(--parchment-line); }
+.d-nav button{ background:none; border:none; color:var(--navy); font-family:var(--font-label); letter-spacing:.06em; font-size:.76rem; padding:6px 0; max-width:48%; text-align:left; }
+.d-nav button:last-child{ text-align:right; }
+.d-nav button:hover{ color:var(--oxblood); }
+
+/* comparison */
+.compare-table td.best{ background:rgba(169,126,57,.14); font-weight:600; position:relative; }
+.best-mark{ color:var(--gold); }
+.cmp-bar{ height:5px; background:var(--parchment-dark); border-radius:3px; margin-top:6px; overflow:hidden; }
+.cmp-bar i{ display:block; height:100%; background:linear-gradient(90deg, var(--gold), var(--oxblood)); }
+.th-link{ background:none; border:none; padding:0; font:inherit; color:inherit; letter-spacing:inherit; text-transform:inherit; text-align:left; text-decoration:underline dotted; }
+.cmp-legend{ font-size:.82rem; font-style:italic; color:#6c6551; margin:12px 0; display:flex; align-items:center; gap:8px; }
+.best-swatch{ width:14px; height:14px; background:rgba(169,126,57,.3); border:1px solid var(--gold); display:inline-block; }
+
+/* profile / help / install */
+.prof-grid{ display:grid; gap:12px; margin-bottom:6px; }
+.prof-grid label{ display:flex; flex-direction:column; gap:5px; font-family:var(--font-label); letter-spacing:.08em; font-size:.78rem; color:var(--navy); }
+.prof-grid input{ font-family:var(--font-display); font-size:1.05rem; padding:9px 12px; border:1px solid var(--parchment-line); border-radius:3px; background:#fffdf7; color:var(--ink); }
+.prof-grid input:focus{ outline:none; border-color:var(--gold); box-shadow:0 0 0 2px rgba(169,126,57,.18); }
+.keys{ display:grid; gap:8px; font-size:.95rem; }
+.keys div{ display:flex; align-items:center; gap:6px; }
+.keys span{ margin-left:auto; font-style:italic; color:#5b5646; }
+kbd{ font-family:var(--font-display); font-size:.8rem; background:#fffdf8; border:1px solid var(--parchment-line); border-bottom-width:2px; border-radius:3px; padding:1px 7px; color:var(--navy); }
+.dl-grid{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.dl{ display:flex; flex-direction:column; gap:3px; text-align:left; text-decoration:none; color:var(--ink); background:#fffdf8; border:1px solid var(--parchment-line); border-radius:6px; padding:16px; font:inherit; cursor:pointer;
+  transition:transform .25s var(--ease-spring), border-color .25s var(--ease); }
+a.dl:hover, button.dl:hover{ transform:translateY(-3px); border-color:var(--gold); }
+.dl span{ font-size:1.5rem; } .dl b{ font-family:var(--font-display); color:var(--navy); } .dl small{ font-style:italic; color:#6c6551; font-size:.82rem; }
+
+@media (max-width:640px){
+  .x-actions{ order:10; width:100%; }
+  .result-count{ order:11; }
+  .x-dock{ left:auto; right:14px; bottom:14px; flex-direction:column-reverse; opacity:0; pointer-events:none; transform:translateY(10px); transition:opacity .3s var(--ease), transform .3s var(--ease); }
+  .x-dock.scrolled{ opacity:1; pointer-events:auto; transform:none; }
+  .x-btn span{ display:none; }
+  .x-dock button span{ display:none; }
+  .x-dock #installBtn{ width:42px; padding:0; }
+  .dl-grid{ grid-template-columns:1fr; }
+  .cost-years > div{ grid-template-columns:52px 1fr 84px; }
+  .card-actions .save-btn{ min-width:74px; }
 }
 </style>
 </head>
@@ -1029,6 +1159,335 @@ function initHeroStats(){
   renderCompareTray();
   attachControlListeners();
   initReveal();
+})();
+</script>
+<script>
+/* ============================================================
+   EXTRAS — admissions fit, shortlist, distance, cost estimator,
+   richer comparison, deep links, keyboard, install
+   (wraps the original functions above; no changes to the data)
+   ============================================================ */
+(function(){
+'use strict';
+const KEY = 'collegiateRegistry.v1';
+const ST = (()=>{ try{ return Object.assign({ saved:[], sat:'', act:'', gpa:'', home:null, welcomed:false }, JSON.parse(localStorage.getItem(KEY)||'{}')); }catch(e){ return { saved:[], sat:'', act:'', gpa:'', home:null, welcomed:false }; } })();
+function persist(){ try{ localStorage.setItem(KEY, JSON.stringify(ST)); }catch(e){} }
+const byId = id => COLLEGES.find(c=>c.id===id);
+const $ = id => document.getElementById(id);
+const isSaved = id => ST.saved.includes(id);
+
+/* ---------- admissions fit ---------- */
+function fitOf(c){
+  let pos = null;
+  if(ST.sat){ pos = (ST.sat - c.satLow) / Math.max(1, c.satHigh - c.satLow); }
+  else if(ST.act){ pos = (ST.act - c.actLow) / Math.max(1, c.actHigh - c.actLow); }
+  if(pos === null) return null;
+  let lvl = pos >= 0.75 ? 2 : pos >= 0.25 ? 1 : 0;           // 2 likely · 1 target · 0 reach
+  if(c.acceptance < 20) lvl = Math.min(lvl, 1);
+  if(c.acceptance < 20 && pos < 0.6) lvl = 0;
+  if(c.acceptance < 10) lvl = 0;
+  if(c.acceptance > 60 && pos >= 0) lvl = Math.max(lvl, 2);
+  return ['reach','target','likely'][lvl];
+}
+const FIT_LABEL = { reach:'Reach', target:'Target', likely:'Likely' };
+const hasProfile = () => !!(ST.sat || ST.act);
+
+/* ---------- distance ---------- */
+function miles(a, b){
+  const R = 3958.8, toR = x => x*Math.PI/180;
+  const dLat = toR(b.lat-a.lat), dLon = toR(b.lon-a.lon);
+  const h = Math.sin(dLat/2)**2 + Math.cos(toR(a.lat))*Math.cos(toR(b.lat))*Math.sin(dLon/2)**2;
+  return Math.round(2*R*Math.asin(Math.sqrt(h)));
+}
+
+/* ---------- extra controls ---------- */
+function addControls(){
+  const sort = $('sortBy');
+  sort.insertAdjacentHTML('beforeend', '<option value="distance">Sort: Nearest to Me</option><option value="fit">Sort: Best Fit</option>');
+  const fit = document.createElement('select'); fit.id = 'filterFit';
+  fit.innerHTML = '<option value="all">All Fits</option><option value="likely">Likely</option><option value="target">Target</option><option value="reach">Reach</option>';
+  $('filterTuition').after(fit);
+  const bar = document.createElement('div'); bar.className = 'x-actions';
+  bar.innerHTML = `
+    <button class="x-btn" id="profileBtn" title="Enter your scores to see Reach / Target / Likely">🎓 <span>My Scores</span></button>
+    <button class="x-btn" id="savedBtn" title="Show only your shortlist (S)">★ <span>Shortlist</span> <b id="savedCount">0</b></button>
+    <button class="x-btn" id="randomBtn" title="Open a random institution (R)">🎲</button>
+    <button class="x-btn" id="helpBtn" title="Shortcuts (?)">?</button>`;
+  $('resultCount').before(bar);
+  $('profileBtn').addEventListener('click', openProfile);
+  $('savedBtn').addEventListener('click', ()=>{ savedOnly = !savedOnly; $('savedBtn').classList.toggle('on', savedOnly); refresh(true); if(savedOnly && !ST.saved.length) showToast('Your shortlist is empty — tap ☆ Save on any dossier.'); });
+  $('randomBtn').addEventListener('click', ()=>{ const l = getFiltered(); const c = (l.length?l:COLLEGES)[Math.floor(Math.random()*(l.length||COLLEGES.length))]; openDetail(c.id); });
+  $('helpBtn').addEventListener('click', openHelp);
+  fit.addEventListener('change', ()=>{ if(fit.value!=='all' && !hasProfile()){ fit.value='all'; openProfile(); return; } refresh(true); });
+  sort.addEventListener('change', ()=>{
+    if(sort.value==='distance' && !ST.home){ locate(); }
+    if(sort.value==='fit' && !hasProfile()){ openProfile(); }
+  });
+  // floating dock
+  const dock = document.createElement('div'); dock.className = 'x-dock';
+  dock.innerHTML = `<button id="topBtn" title="Back to top" aria-label="Back to top">↑</button><button id="installBtn" title="Get the app">⬇ <span>Get the App</span></button>`;
+  document.body.appendChild(dock);
+  $('topBtn').addEventListener('click', ()=> scrollTo({top:0, behavior:'smooth'}));
+  $('installBtn').addEventListener('click', openInstall);
+  addEventListener('scroll', ()=>{ dock.classList.toggle('scrolled', scrollY > 600); $('audioPanel').classList.toggle('compact', scrollY > 300); }, { passive:true });
+  updateSavedCount();
+}
+let savedOnly = false;
+function updateSavedCount(){ const el = $('savedCount'); if(el) el.textContent = ST.saved.length; }
+function refresh(reset){ renderGallery(reset); if(currentView==='map') renderMap(); }
+
+function locate(){
+  if(!navigator.geolocation){ showToast('Location is not available in this browser.'); $('sortBy').value='fame'; return; }
+  showToast('Requesting your location to measure distances…');
+  navigator.geolocation.getCurrentPosition(p=>{
+    ST.home = { lat:p.coords.latitude, lon:p.coords.longitude }; persist();
+    $('sortBy').value='distance'; refresh(true); showToast('Sorted by distance from you.');
+  }, ()=>{ showToast('Location permission was declined.'); $('sortBy').value='fame'; refresh(true); }, { timeout:10000 });
+}
+
+/* ---------- wrap filtering ---------- */
+const _getFiltered = getFiltered;
+getFiltered = function(){
+  let list = _getFiltered();
+  const fit = $('filterFit') ? $('filterFit').value : 'all';
+  if(savedOnly) list = list.filter(c=>isSaved(c.id));
+  if(fit!=='all' && hasProfile()) list = list.filter(c=>fitOf(c)===fit);
+  const sort = $('sortBy').value;
+  if(sort==='distance' && ST.home) list = list.slice().sort((a,b)=>miles(ST.home,a)-miles(ST.home,b));
+  if(sort==='fit' && hasProfile()){ const r = { likely:0, target:1, reach:2 }; list = list.slice().sort((a,b)=> (r[fitOf(a)]-r[fitOf(b)]) || a.ranking-b.ranking); }
+  return list;
+};
+
+/* ---------- wrap gallery rendering: fit pill, distance, save, valid link ---------- */
+const _renderGallery = renderGallery;
+renderGallery = function(reset){
+  _renderGallery(reset);
+  document.querySelectorAll('#gallery .card').forEach(card=>{
+    const c = byId(card.dataset.id); if(!c) return;
+    const title = card.querySelector('.card-title');
+    const fit = fitOf(c);
+    if(fit) title.insertAdjacentHTML('beforeend', `<span class="fit-pill fit-${fit}" title="Based on your scores">${FIT_LABEL[fit]}</span>`);
+    if(ST.home) card.querySelector('.card-title .loc').insertAdjacentHTML('beforeend', ` &middot; ${miles(ST.home,c).toLocaleString()} mi`);
+    const acts = card.querySelector('.card-actions');
+    const a = acts.querySelector('a');
+    if(a){ const link = document.createElement('a'); link.href = a.href; link.target = '_blank'; link.rel = 'noopener'; link.className = 'as-btn'; link.textContent = 'Visit Site'; a.replaceWith(link); }
+    const save = document.createElement('button');
+    save.className = 'save-btn' + (isSaved(c.id) ? ' on' : ''); save.type = 'button';
+    save.innerHTML = isSaved(c.id) ? '★ Saved' : '☆ Save';
+    save.addEventListener('click', e=>{ e.stopPropagation(); toggleSave(c.id, save); });
+    acts.appendChild(save);
+    if(isSaved(c.id)) card.classList.add('is-saved');
+  });
+};
+function toggleSave(id, btn){
+  ST.saved = isSaved(id) ? ST.saved.filter(x=>x!==id) : ST.saved.concat(id); persist(); updateSavedCount();
+  const on = isSaved(id);
+  if(btn){ btn.classList.toggle('on', on); btn.innerHTML = on ? '★ Saved' : '☆ Save'; btn.closest('.card') && btn.closest('.card').classList.toggle('is-saved', on); btn.classList.remove('pop'); void btn.offsetWidth; btn.classList.add('pop'); }
+  showToast(on ? `${byId(id).name} entered upon your shortlist.` : `${byId(id).name} removed from your shortlist.`);
+  if(savedOnly) refresh(false);
+}
+
+/* ---------- wrap map: highlight shortlist, fit colours ---------- */
+const _renderMap = renderMap;
+renderMap = function(){
+  _renderMap();
+  const list = getFiltered();
+  document.querySelectorAll('#mapFrame .pin').forEach((pin, i)=>{
+    const c = list[i]; if(!c) return;
+    if(isSaved(c.id)) pin.classList.add('saved');
+    const f = fitOf(c); if(f) pin.classList.add('fit-'+f);
+  });
+};
+
+/* ---------- dossier: fit gauge, cost estimator, save/share, prev/next ---------- */
+const _openDetail = openDetail;
+let detailId = null;
+openDetail = function(id){
+  _openDetail(id);
+  const c = byId(id); if(!c) return;
+  detailId = id;
+  if(location.hash !== '#c=' + id) history.replaceState(null, '', '#c=' + id);
+  const modal = $('detailModal'), body = modal.querySelector('.modal-body'), actions = modal.querySelector('.modal-actions');
+  const fit = fitOf(c);
+  const fitHtml = hasProfile() ? (()=>{
+    const lo = ST.sat ? c.satLow : c.actLow, hi = ST.sat ? c.satHigh : c.actHigh, me = ST.sat || ST.act;
+    const min = ST.sat ? 400 : 1, max = ST.sat ? 1600 : 36, pct = v => ((v-min)/(max-min))*100;
+    return `<div class="modal-section"><h4>Your Standing</h4>
+      <div class="fit-gauge"><div class="fg-range" style="left:${pct(lo)}%;width:${pct(hi)-pct(lo)}%"></div><div class="fg-me" style="left:${pct(me)}%"><span>You · ${me}</span></div></div>
+      <div class="fg-scale"><span>${min}</span><span>middle 50%: ${lo}&ndash;${hi} (${ST.sat?'SAT':'ACT'})</span><span>${max}</span></div>
+      <p class="fit-note">This institution reads as a <span class="fit-pill fit-${fit}">${FIT_LABEL[fit]}</span> for you, given an admission rate of ${c.acceptance}%. ${fit==='reach'?'Strengthen the essays and recommendations — scores alone will not carry it.':fit==='target'?'Your scores sit within range; the rest of the application will decide.':'Your scores sit comfortably above the middle range.'}</p></div>`;
+  })() : `<div class="modal-section"><h4>Your Standing</h4><p class="fit-note"><button class="link-btn" id="dProfile">Enter your SAT or ACT</button> to see whether ${c.name} is a Reach, Target or Likely admission for you.</p></div>`;
+  const costHtml = `<div class="modal-section"><h4>A Four-Year Cost Estimate</h4>
+    <div class="cost">
+      <label>Grant aid <b id="aidOut">0%</b><input type="range" id="aidIn" min="0" max="100" step="5" value="0"></label>
+      <label>Annual increase <b id="incOut">3%</b><input type="range" id="incIn" min="0" max="8" step="0.5" value="3"></label>
+      <div class="cost-years" id="costYears"></div>
+      <div class="cost-total">Estimated tuition, four years: <b id="costTotal"></b></div>
+      <p class="cost-note">Tuition only — room, board and fees are additional. Figures are illustrative.</p>
+    </div></div>`;
+  actions.insertAdjacentHTML('beforebegin', fitHtml + costHtml);
+  actions.insertAdjacentHTML('beforeend', `<button class="btn-formal ghost" id="dSave">${isSaved(id)?'★ On Your Shortlist':'☆ Add to Shortlist'}</button><button class="btn-formal ghost" id="dShare">🔗 Share Dossier</button>`);
+  const list = getFiltered(), idx = list.findIndex(x=>x.id===id);
+  const prev = list[idx-1], next = list[idx+1];
+  body.insertAdjacentHTML('beforeend', `<div class="d-nav">${prev?`<button data-go="${prev.id}">&larr; ${prev.name}</button>`:'<span></span>'}${next?`<button data-go="${next.id}">${next.name} &rarr;</button>`:'<span></span>'}</div>`);
+  body.querySelectorAll('[data-go]').forEach(b=>b.addEventListener('click', ()=>{ modal.scrollTop = 0; openDetail(b.dataset.go); }));
+  const dp = $('dProfile'); if(dp) dp.addEventListener('click', openProfile);
+  $('dSave').addEventListener('click', ()=>{ toggleSave(id); openDetail(id); renderGallery(false); });
+  $('dShare').addEventListener('click', ()=> share(`${c.name} — The Collegiate Registry`, location.href.split('#')[0] + '#c=' + id));
+  const aid = $('aidIn'), inc = $('incIn');
+  function calc(){
+    const a = +aid.value/100, r = +inc.value/100; let total = 0, rows = '';
+    for(let y=0; y<4; y++){ const t = Math.round(c.tuition * Math.pow(1+r, y) * (1-a)); total += t; rows += `<div><span>Year ${y+1}</span><div class="cy-bar"><i style="width:${c.tuition? (t/(c.tuition*1.3))*100 : 0}%"></i></div><b>$${t.toLocaleString()}</b></div>`; }
+    $('aidOut').textContent = aid.value + '%'; $('incOut').textContent = inc.value + '%';
+    $('costYears').innerHTML = rows; $('costTotal').textContent = c.tuition ? '$' + total.toLocaleString() : 'Fully Sponsored';
+  }
+  aid.addEventListener('input', calc); inc.addEventListener('input', calc); calc();
+};
+const _closeDetail = closeDetail;
+closeDetail = function(){ _closeDetail(); detailId = null; if(location.hash.startsWith('#c=')) history.replaceState(null, '', location.pathname + location.search); };
+
+/* ---------- comparison: best-in-row highlights + bars ---------- */
+const _openCompareModal = openCompareModal;
+$('openCompare').removeEventListener('click', _openCompareModal);
+$('openCompare').addEventListener('click', ()=> openCompareModal());
+openCompareModal = function(){
+  if(compareSelection.length < 2){ showToast('Kindly select at least two institutions to compare.'); return; }
+  const cs = compareSelection.map(byId);
+  const rows = [
+    ['Location', c=>`${c.city}, ${c.state}`],
+    ['Founded', c=>c.founded],
+    ['Fame Rank', c=>'#'+c.ranking, c=>c.ranking, 'min'],
+    ['Type', c=> c.badge==='none' ? 'Other Notable' : BADGE_LABEL[c.badge]],
+    ['Admission Rate', c=>c.acceptance+'%', c=>c.acceptance, 'min', 100],
+    ['SAT Range', c=>c.satLow+'&ndash;'+c.satHigh, c=>c.satHigh, 'max', 1600],
+    ['ACT Range', c=>c.actLow+'&ndash;'+c.actHigh, c=>c.actHigh, 'max', 36],
+    ['Annual Tuition', c=>fmtMoney(c.tuition), c=>c.tuition, 'min', 70000],
+    ['Undergraduates', c=>fmtPop(c.population), c=>c.population, null, 60000],
+    ['Quality Score', c=>c.quality+' / 100', c=>c.quality, 'max', 100],
+    ['Student Performance', c=>c.performance+' / 100', c=>c.performance, 'max', 100],
+    ['Notable Programs', c=>c.majors.slice(0,3).join(', ')]
+  ];
+  if(hasProfile()) rows.splice(4, 0, ['Your Fit', c=>`<span class="fit-pill fit-${fitOf(c)}">${FIT_LABEL[fitOf(c)]}</span>`]);
+  if(ST.home) rows.splice(1, 0, ['Distance', c=>miles(ST.home,c).toLocaleString()+' mi', c=>miles(ST.home,c), 'min']);
+  const cell = (row, c) => {
+    const [, fmt, val, best, scale] = row;
+    let cls = '', bar = '';
+    if(val && best){ const vals = cs.map(val); const target = best==='min' ? Math.min(...vals) : Math.max(...vals); if(val(c)===target && new Set(vals).size>1) cls = ' class="best"'; }
+    if(val && scale){ bar = `<div class="cmp-bar"><i style="width:${Math.min(100, val(c)/scale*100)}%"></i></div>`; }
+    return `<td${cls}>${fmt(c)}${cls ? ' <span class="best-mark">✦</span>' : ''}${bar}</td>`;
+  };
+  $('compareModal').innerHTML = `
+    <div class="modal-header">
+      <button class="modal-close" id="closeCompare" aria-label="Close">&times;</button>
+      <div><h3>A Comparison of Institutions</h3><p class="loc">${cs.map(c=>c.name).join(' &middot; ')}</p></div>
+    </div>
+    <div class="modal-body" style="overflow-x:auto;">
+      <table class="compare-table">
+        <thead><tr><th></th>${cs.map(c=>`<th><button class="th-link" data-open-c="${c.id}">${c.name}</button></th>`).join('')}</tr></thead>
+        <tbody>${rows.map(r=>`<tr><td class="attr-label">${r[0]}</td>${cs.map(c=>cell(r,c)).join('')}</tr>`).join('')}</tbody>
+      </table>
+      <p class="cmp-legend"><span class="best-swatch"></span> Leading value in each row</p>
+      <div class="modal-actions"><button class="btn-formal ghost" id="shareCompare">🔗 Share Comparison</button></div>
+    </div>`;
+  $('closeCompare').addEventListener('click', ()=> $('compareOverlay').classList.remove('show'));
+  $('compareModal').querySelectorAll('[data-open-c]').forEach(b=>b.addEventListener('click', ()=>{ $('compareOverlay').classList.remove('show'); openDetail(b.dataset.openC); }));
+  $('shareCompare').addEventListener('click', ()=> share('A comparison — The Collegiate Registry', location.href.split('#')[0] + '#compare=' + compareSelection.join(',')));
+  $('compareOverlay').classList.add('show');
+};
+
+/* ---------- overlays: profile, help, install ---------- */
+function overlay(id, html, wide){
+  let ov = $(id);
+  if(!ov){ ov = document.createElement('div'); ov.className = 'overlay'; ov.id = id; ov.innerHTML = '<div class="modal"></div>'; document.body.appendChild(ov);
+    ov.addEventListener('click', e=>{ if(e.target===ov || e.target.closest('[data-x]')) ov.classList.remove('show'); }); }
+  const m = ov.querySelector('.modal'); m.style.maxWidth = wide ? '760px' : '520px';
+  m.innerHTML = html; requestAnimationFrame(()=> ov.classList.add('show')); return ov;
+}
+function openProfile(){
+  const ov = overlay('profileOverlay', `
+    <div class="modal-header"><button class="modal-close" data-x aria-label="Close">&times;</button><div><h3>Your Academic Profile</h3><p class="loc">Kept privately on this device only.</p></div></div>
+    <div class="modal-body">
+      <div class="prof-grid">
+        <label>SAT total (400–1600)<input type="number" id="pSat" min="400" max="1600" step="10" value="${ST.sat}" placeholder="e.g. 1420"></label>
+        <label>or ACT composite (1–36)<input type="number" id="pAct" min="1" max="36" value="${ST.act}" placeholder="e.g. 31"></label>
+        <label>GPA (unweighted, optional)<input type="number" id="pGpa" min="0" max="4" step="0.01" value="${ST.gpa}" placeholder="e.g. 3.8"></label>
+      </div>
+      <p class="fit-note">Each institution will be marked <span class="fit-pill fit-reach">Reach</span> <span class="fit-pill fit-target">Target</span> or <span class="fit-pill fit-likely">Likely</span> from where your score sits in its middle-50% range, adjusted for how selective it is. A rough guide — not a prediction.</p>
+      <div class="modal-actions"><button class="btn-formal primary" id="pSave">Apply to the Registry</button><button class="btn-formal ghost" id="pClear">Clear</button></div>
+    </div>`);
+  $('pSave').addEventListener('click', ()=>{
+    const sat = parseInt($('pSat').value,10), act = parseInt($('pAct').value,10), gpa = parseFloat($('pGpa').value);
+    ST.sat = sat>=400 && sat<=1600 ? sat : ''; ST.act = !ST.sat && act>=1 && act<=36 ? act : ''; ST.gpa = gpa>=0 && gpa<=5 ? gpa : '';
+    if(!ST.sat && !ST.act){ showToast('Kindly enter a valid SAT (400–1600) or ACT (1–36).'); return; }
+    persist(); ov.classList.remove('show'); refresh(false); updateProfileBtn();
+    const counts = { reach:0, target:0, likely:0 }; COLLEGES.forEach(c=>counts[fitOf(c)]++);
+    showToast(`Marked: ${counts.likely} Likely · ${counts.target} Target · ${counts.reach} Reach.`);
+    if(detailId) openDetail(detailId);
+  });
+  $('pClear').addEventListener('click', ()=>{ ST.sat = ST.act = ST.gpa = ''; persist(); $('filterFit').value='all'; ov.classList.remove('show'); refresh(false); updateProfileBtn(); });
+  setTimeout(()=> $('pSat').focus(), 80);
+}
+function updateProfileBtn(){ const b = $('profileBtn'); if(b) b.querySelector('span').textContent = ST.sat ? `SAT ${ST.sat}` : ST.act ? `ACT ${ST.act}` : 'My Scores'; b && b.classList.toggle('on', hasProfile()); }
+function openHelp(){
+  overlay('helpOverlay', `<div class="modal-header"><button class="modal-close" data-x aria-label="Close">&times;</button><div><h3>A Guide to the Registry</h3></div></div>
+    <div class="modal-body"><div class="keys">
+      <div><kbd>/</kbd><span>Search the Registry</span></div><div><kbd>←</kbd> <kbd>→</kbd><span>Previous / next dossier</span></div>
+      <div><kbd>S</kbd><span>Shortlist only</span></div><div><kbd>R</kbd><span>Random institution</span></div>
+      <div><kbd>A</kbd><span>Gallery ↔ Atlas</span></div><div><kbd>C</kbd><span>Open comparison</span></div><div><kbd>Esc</kbd><span>Close</span></div></div>
+      <p class="fit-note">Select a crest to mark it for comparison (up to four). Enter your scores under 🎓 to see Reach / Target / Likely on every card, and sort by distance from you.</p></div>`);
+}
+const APK = 'https://github.com/jaineil32624/The-Collegiate-Registry/releases/latest/download/CollegiateRegistry.apk';
+let deferred = null; addEventListener('beforeinstallprompt', e=>{ e.preventDefault(); deferred = e; });
+function openInstall(){
+  const ov = overlay('installOverlay', `<div class="modal-header"><button class="modal-close" data-x aria-label="Close">&times;</button><div><h3>Take the Registry With You</h3><p class="loc">Works offline once installed.</p></div></div>
+    <div class="modal-body"><div class="dl-grid">
+      <a class="dl" href="${APK}"><span>🤖</span><b>Android</b><small>Download the APK</small></a>
+      <button class="dl" id="pwaBtn"><span>💻</span><b>Install App</b><small>Chrome or Edge</small></button>
+      <div class="dl"><span>🍎</span><b>iPhone &amp; iPad</b><small>Safari → Share → Add to Home Screen</small></div>
+      <a class="dl" href="https://github.com/jaineil32624/The-Collegiate-Registry/releases/latest"><span>📦</span><b>All Downloads</b><small>APK and offline archive</small></a></div></div>`);
+  $('pwaBtn').addEventListener('click', async ()=>{ if(deferred){ deferred.prompt(); await deferred.userChoice; deferred = null; ov.classList.remove('show'); } else showToast('Use your browser menu → Install app / Add to Home Screen.'); });
+}
+async function share(title, url){
+  try{ if(navigator.share){ await navigator.share({ title, url }); return; } }catch(e){ if(e.name==='AbortError') return; }
+  try{ await navigator.clipboard.writeText(url); showToast('Link copied to your clipboard.'); }catch(e){ prompt('Copy this link:', url); }
+}
+
+/* ---------- keyboard ---------- */
+document.addEventListener('keydown', e=>{
+  const typing = /^(INPUT|SELECT|TEXTAREA)$/.test(document.activeElement.tagName);
+  const open = document.querySelector('.overlay.show');
+  if(e.key==='Escape'){ document.querySelectorAll('.overlay.show').forEach(o=>o.classList.remove('show')); closeDetail(); return; }
+  if(typing || e.ctrlKey || e.metaKey || e.altKey) return;
+  if(open && open.id==='detailOverlay' && (e.key==='ArrowLeft'||e.key==='ArrowRight')){
+    const b = [...open.querySelectorAll('.d-nav [data-go]')].find(x=> e.key==='ArrowLeft' ? x.textContent.trim().startsWith('←') : x.textContent.trim().endsWith('→'));
+    if(b) b.click(); return;
+  }
+  if(open) return;
+  const k = e.key.toLowerCase();
+  if(e.key==='/'){ e.preventDefault(); $('searchInput').focus(); }
+  else if(e.key==='?') openHelp();
+  else if(k==='s') $('savedBtn').click();
+  else if(k==='r') $('randomBtn').click();
+  else if(k==='a') setView(currentView==='map' ? 'gallery' : 'map');
+  else if(k==='c') openCompareModal();
+});
+
+/* ---------- deep links ---------- */
+function route(){
+  const h = location.hash;
+  if(h.startsWith('#c=') && byId(h.slice(3))) openDetail(h.slice(3));
+  else if(h.startsWith('#compare=')){
+    compareSelection = h.slice(9).split(',').filter(byId).slice(0, MAX_COMPARE);
+    renderGallery(false); renderCompareTray(); if(compareSelection.length>=2) openCompareModal();
+  }
+}
+addEventListener('hashchange', route);
+
+/* ---------- boot ---------- */
+addControls(); updateProfileBtn(); renderGallery(true);
+if(location.hash) setTimeout(route, 300);
+if(!ST.welcomed){ ST.welcomed = true; persist(); setTimeout(()=> showToast('New: enter your scores under 🎓 My Scores to see Reach · Target · Likely.'), 2600); }
+if('serviceWorker' in navigator && location.protocol==='https:') navigator.serviceWorker.register('sw.js').catch(()=>{});
 })();
 </script>
 </body>

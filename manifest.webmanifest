@@ -1,0 +1,18 @@
+{
+  "name": "The Collegiate Registry",
+  "short_name": "Registry",
+  "description": "An illustrated, interactive survey of 250 leading American universities — compare, shortlist, find your fit and estimate costs.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#f7f2e5",
+  "theme_color": "#0d2038",
+  "categories": ["education", "reference"],
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" },
+    { "src": "icons/icon.svg", "sizes": "any", "type": "image/svg+xml" }
+  ]
+}
